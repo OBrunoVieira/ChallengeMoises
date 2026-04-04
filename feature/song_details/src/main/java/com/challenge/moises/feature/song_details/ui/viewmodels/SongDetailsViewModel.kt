@@ -1,0 +1,51 @@
+package com.challenge.moises.feature.song_details.ui.viewmodels
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.challenge.moises.feature.song_details.domain.usecase.GetSongDetailsUseCase
+import com.challenge.moises.feature.song_details.ui.models.states.SongDetailsUiState
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+@HiltViewModel(assistedFactory = SongDetailsViewModel.Factory::class)
+class SongDetailsViewModel @AssistedInject constructor(
+    private val getSongDetailsUseCase: GetSongDetailsUseCase,
+    @Assisted private val songId: String
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(SongDetailsUiState())
+    val uiState: StateFlow<SongDetailsUiState> = _uiState.asStateFlow()
+
+    init {
+        loadSong(songId)
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(songId: String): SongDetailsViewModel
+    }
+
+    fun loadSong(songId: String) {
+        viewModelScope.launch {
+            getSongDetailsUseCase(songId)
+                .onStart {
+                    _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+                }
+                .catch { error ->
+                    _uiState.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unknown error") }
+                }
+                .collect { songs ->
+                    _uiState.update { it.copy(isLoading = false, song = songs.firstOrNull()) }
+                }
+        }
+    }
+}
