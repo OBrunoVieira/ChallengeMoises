@@ -66,7 +66,7 @@ fun SongsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val query by viewModel.query.collectAsState()
 
-    SongsContent(
+    SongsScreen(
         uiState = uiState,
         query = query,
         onQueryChanged = viewModel::onQueryChanged,
@@ -77,7 +77,7 @@ fun SongsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SongsContent(
+private fun SongsScreen(
     uiState: SongsUiState,
     query: String,
     onQueryChanged: (String) -> Unit,
@@ -213,7 +213,7 @@ fun SongsContent(
 @MoisesPreviewScreenSizes
 @Composable
 fun SongsScreenPreview() {
-    SongsContent(
+    SongsScreen(
         uiState = SongsUiState(
             songs = listOf(
                 Song(
@@ -224,6 +224,7 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     albumName = "Hunting High and Low",
                     artistId = "123",
+                    previewUrl = null
                 ),
                 Song(
                     id = "2",
@@ -233,6 +234,7 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     albumName = "Thriller",
                     artistId = "456",
+                    previewUrl = null
                 )
             )
         ),
