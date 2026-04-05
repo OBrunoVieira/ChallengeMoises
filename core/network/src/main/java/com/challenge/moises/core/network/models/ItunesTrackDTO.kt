@@ -43,6 +43,7 @@ data class ItunesTrackDTO(
         artistName = artistName ?: "Unknown Artist",
         albumName = collectionName,
         collectionId = collectionId?.toString(),
-        artworkUrl = artworkUrl100
+        artworkUrl = artworkUrl100,
+        previewUrl = previewUrl
     )
 }
