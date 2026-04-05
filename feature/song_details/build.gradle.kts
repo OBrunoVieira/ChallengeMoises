@@ -29,19 +29,23 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(project(":core:network"))
     implementation(project(":design"))
-    
+
+    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.coil.compose)
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     
-    // ViewModel in Compose
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.androidx.compose.material.icons.extended)
-    implementation(libs.coil.compose)
+    // Coil
     implementation(libs.coil.network.okhttp)
+
+    // Exoplayer
+    implementation(libs.androidx.media3.exoplayer)
 }
