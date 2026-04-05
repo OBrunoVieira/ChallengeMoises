@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.challenge.moises.design.R
@@ -39,7 +40,7 @@ fun SongListItem(
     title: String,
     subtitle: String,
     imageUrl: String?,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier,
     trailingIcon: @Composable (() -> Unit)? = {
         IconButton(onClick = { /* More actions */ }) {
@@ -108,4 +109,15 @@ fun SongListItem(
             trailingIcon()
         }
     }
+}
+
+@Preview
+@Composable
+fun SongListItemPreview() {
+    SongListItem(
+        title = "Take On Me",
+        subtitle = "a-ha",
+        imageUrl = null,
+        onClick = {},
+    )
 }
