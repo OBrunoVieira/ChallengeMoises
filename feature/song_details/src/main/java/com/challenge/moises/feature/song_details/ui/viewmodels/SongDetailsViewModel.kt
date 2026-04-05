@@ -48,4 +48,8 @@ class SongDetailsViewModel @AssistedInject constructor(
                 }
         }
     }
+
+    fun onIsPlayingChanged(isPlaying: Boolean) {
+        _uiState.update { it.copy(isPlaying = isPlaying) }
+    }
 }
