@@ -41,7 +41,12 @@ class SongDetailsViewModel @AssistedInject constructor(
                     _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                 }
                 .catch { error ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unknown error") }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = error.message ?: "Unknown error"
+                        )
+                    }
                 }
                 .collect { songs ->
                     _uiState.update { it.copy(isLoading = false, song = songs.firstOrNull()) }
@@ -51,5 +56,9 @@ class SongDetailsViewModel @AssistedInject constructor(
 
     fun onIsPlayingChanged(isPlaying: Boolean) {
         _uiState.update { it.copy(isPlaying = isPlaying) }
+    }
+
+    fun setPlayerReadiness(isReady: Boolean) {
+        _uiState.update { it.copy(isPlayerReady = isReady) }
     }
 }
