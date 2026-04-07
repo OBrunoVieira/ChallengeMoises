@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -99,6 +98,7 @@ fun SongDetailsScreen(
             override fun onIsPlayingChanged(isPlayingParam: Boolean) {
                 viewModel.onIsPlayingChanged(isPlayingParam)
             }
+
             override fun onPlaybackStateChanged(playbackState: Int) {
                 if (playbackState == Player.STATE_READY) {
                     viewModel.setPlayerReadiness(true)
@@ -125,7 +125,7 @@ fun SongDetailsScreen(
     Box(Modifier.fillMaxSize()) {
         val isVideo = uiState.song?.kind == "music-video"
 
-        if(uiState.isPlayerReady) {
+        if (uiState.isPlayerReady) {
             if (isVideo) {
                 AndroidView(
                     factory = { context ->
@@ -286,24 +286,14 @@ private fun MoisesPlayerControl(
             title = song?.title.orEmpty(),
             subtitle = song?.artistName.orEmpty(),
             imageUrl = song?.artworkUrl,
+            onClick = {
+                song?.collectionId?.let {
+                    onPause()
+                    onAlbumClick(it)
+                }
+            },
             trailingIcon = null
         )
-
-        song?.albumName?.let { albumName ->
-            Text(
-                text = stringResource(DesignR.string.album_label, albumName),
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.7f),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        song.collectionId?.let {
-                            onPause()
-                            onAlbumClick(it)
-                        }
-                    }
-            )
-        }
 
         Spacer(Modifier.height(MoisesSpacings.medium))
 
@@ -345,7 +335,8 @@ fun SongDetailsScreenPreview() {
                 previewUrl = "https://example.com/preview.mp3",
                 collectionId = "123",
                 artistId = "456",
-                kind = "song"
+                kind = "song",
+                isCollection = false
             )
         )
     )
