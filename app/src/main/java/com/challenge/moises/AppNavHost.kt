@@ -42,6 +42,13 @@ fun AppNavHost() {
                             if (backStack.size > 1) backStack.removeAt(backStack.size - 1) 
                         },
                         onSongClick = { songId ->
+                            if (backStack.lastOrNull() is NavRoute.Album) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
+                            if (backStack.lastOrNull() is NavRoute.SongDetails) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
+
                             backStack.add(NavRoute.SongDetails(songId))
                         }
                     )
