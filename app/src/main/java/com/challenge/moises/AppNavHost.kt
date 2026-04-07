@@ -22,8 +22,8 @@ fun AppNavHost() {
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
-        onBack = { 
-            if (backStack.size > 1) backStack.removeAt(backStack.size - 1) 
+        onBack = {
+            if (backStack.size > 1) backStack.removeAt(backStack.size - 1)
         }
     ) { key ->
         NavEntry(key = key) {
@@ -35,31 +35,30 @@ fun AppNavHost() {
                         }
                     )
                 }
+
                 is NavRoute.Album -> {
                     AlbumScreen(
                         albumId = key.id,
-                        onBackClick = { 
-                            if (backStack.size > 1) backStack.removeAt(backStack.size - 1) 
+                        onBackClick = {
+                            if (backStack.size > 1) backStack.removeAt(backStack.size - 1)
                         },
                         onSongClick = { songId ->
-                            if (backStack.lastOrNull() is NavRoute.Album) {
-                                backStack.removeAt(backStack.size - 1)
-                            }
-                            if (backStack.lastOrNull() is NavRoute.SongDetails) {
-                                backStack.removeAt(backStack.size - 1)
-                            }
-
                             backStack.add(NavRoute.SongDetails(songId))
                         }
                     )
                 }
+
                 is NavRoute.SongDetails -> {
                     SongDetailsScreen(
                         songId = key.id,
-                        onBackClick = { 
-                            if (backStack.size > 1) backStack.removeAt(backStack.size - 1) 
+                        onBackClick = {
+                            if (backStack.size > 1) backStack.removeAt(backStack.size - 1)
                         },
                         onAlbumClick = { albumId ->
+                            if (backStack.isNotEmpty()) {
+                                backStack.removeAt(backStack.size - 1)
+                            }
+                            backStack.remove(NavRoute.Album(albumId))
                             backStack.add(NavRoute.Album(albumId))
                         }
                     )
