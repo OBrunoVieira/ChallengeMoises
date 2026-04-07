@@ -44,7 +44,8 @@ class AlbumViewModel @AssistedInject constructor(
                     _uiState.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unknown error") }
                 }
                 .collect { songs ->
-                    _uiState.update { it.copy(isLoading = false, songs = songs) }
+                    val (collections, songs) = songs.partition { it.isCollection }
+                    _uiState.update { it.copy(isLoading = false, album = collections.firstOrNull(), songs = songs) }
                 }
         }
     }
