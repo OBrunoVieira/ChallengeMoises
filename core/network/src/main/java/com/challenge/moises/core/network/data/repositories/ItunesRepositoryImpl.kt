@@ -15,12 +15,15 @@ class ItunesRepositoryImpl @Inject constructor(
 ) : ItunesRepository {
 
     override fun searchSongs(query: String): Flow<List<Song>> = flow {
-        val songs = api.search(term = query, entity = "musicTrack").results.map { it.toDomain() }
+        val songs = api.search(term = query, entity = "musicTrack").results
+            .map { it.toDomain() }
+            .sortedByDescending { it.kind == "music-video" }
         emit(songs)
     }.flowOn(Dispatchers.IO)
 
     override fun getAlbumSongs(albumId: String): Flow<List<Song>> = flow {
-        val songs = api.lookup(id = albumId, entity = "musicTrack").results.map { it.toDomain() }
+        val songs = api.lookup(id = albumId, entity = "musicTrack").results
+            .map { it.toDomain() }
         emit(songs)
     }.flowOn(Dispatchers.IO)
 }

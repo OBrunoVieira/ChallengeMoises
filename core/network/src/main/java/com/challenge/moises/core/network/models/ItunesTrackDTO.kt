@@ -38,6 +38,7 @@ data class ItunesTrackDTO(
 ) : Parcelable {
     fun toDomain() = com.challenge.moises.core.network.domain.models.Song(
         id = trackId?.toString() ?: "",
+        kind = kind ?: "",
         artistId = artistId?.toString() ?: "",
         title = trackName ?: "Unknown Track",
         artistName = artistName ?: "Unknown Artist",
