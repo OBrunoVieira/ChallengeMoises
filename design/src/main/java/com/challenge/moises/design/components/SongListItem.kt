@@ -63,7 +63,7 @@ fun SongListItem(
     ) {
         Box(
             modifier = Modifier
-                .size(64.dp)
+                .size(48.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(Color(0xFF1C1C1E)),
             contentAlignment = Alignment.Center
