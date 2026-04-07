@@ -57,8 +57,8 @@ fun AppNavHost() {
                         onAlbumClick = { albumId ->
                             if (backStack.isNotEmpty()) {
                                 backStack.removeAt(backStack.size - 1)
+                                backStack.remove(NavRoute.Album(albumId))
                             }
-                            backStack.remove(NavRoute.Album(albumId))
                             backStack.add(NavRoute.Album(albumId))
                         }
                     )
