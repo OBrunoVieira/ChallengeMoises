@@ -32,13 +32,14 @@ data class ItunesTrackDTO(
 
     @SerializedName("previewUrl")
     val previewUrl: String?,
-    
+
     @SerializedName("artworkUrl100")
     val artworkUrl100: String?
 ) : Parcelable {
     fun toDomain() = com.challenge.moises.core.network.domain.models.Song(
         id = trackId?.toString() ?: "",
-        kind = kind ?: "",
+        isCollection = wrapperType == "collection",
+        kind = kind,
         artistId = artistId?.toString() ?: "",
         title = trackName ?: "Unknown Track",
         artistName = artistName ?: "Unknown Artist",

@@ -2,6 +2,7 @@ package com.challenge.moises.core.network.domain.models
 
 data class Song(
     val id: String,
+    val isCollection : Boolean,
     val artistId: String,
     val title: String,
     val artistName: String,
@@ -9,5 +10,5 @@ data class Song(
     val collectionId: String?,
     val artworkUrl: String?,
     val previewUrl: String?,
-    val kind: String
+    val kind: String?
 )

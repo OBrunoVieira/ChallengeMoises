@@ -8,5 +8,5 @@ import javax.inject.Inject
 class GetSongDetailsUseCase @Inject constructor(
     private val repository: ItunesRepository
 ) {
-    operator fun invoke(songId: String): Flow<List<Song>> = repository.getAlbumSongs(songId)
+    operator fun invoke(trackId: String): Flow<List<Song>> = repository.getSongDetails(trackId)
 }

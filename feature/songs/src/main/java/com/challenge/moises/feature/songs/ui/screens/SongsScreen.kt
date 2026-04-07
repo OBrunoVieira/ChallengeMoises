@@ -223,7 +223,8 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = ""
+                    kind = "",
+                    isCollection = false
                 ),
                 Song(
                     id = "2",
@@ -234,7 +235,8 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = ""
+                    kind = "",
+                    isCollection = false
                 )
             )
         ),
