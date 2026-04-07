@@ -152,10 +152,8 @@ private fun SongsScreen(
                 actions = {
                     MoisesIconButton(
                         onClick = {
-                            isSearching = !isSearching
-                            if(!isSearching) {
-                                onClearQuery()
-                            }
+                            if(isSearching) onClearQuery()
+                            isSearching = true
                         },
                         imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
                         contentDescription = stringResource(DesignR.string.search_action_label),
@@ -218,23 +216,25 @@ fun SongsScreenPreview() {
             songs = listOf(
                 Song(
                     id = "1",
+                    artistId = "123",
                     title = "Take On Me",
                     artistName = "a-ha",
-                    artworkUrl = null,
-                    collectionId = null,
                     albumName = "Hunting High and Low",
-                    artistId = "123",
-                    previewUrl = null
+                    collectionId = null,
+                    artworkUrl = null,
+                    previewUrl = null,
+                    kind = ""
                 ),
                 Song(
                     id = "2",
+                    artistId = "456",
                     title = "Billie Jean",
                     artistName = "Michael Jackson",
-                    artworkUrl = null,
-                    collectionId = null,
                     albumName = "Thriller",
-                    artistId = "456",
-                    previewUrl = null
+                    collectionId = null,
+                    artworkUrl = null,
+                    previewUrl = null,
+                    kind = ""
                 )
             )
         ),
