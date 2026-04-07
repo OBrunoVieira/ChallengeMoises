@@ -120,6 +120,8 @@ fun AlbumScreen(
                             title = song.title,
                             subtitle = song.artistName,
                             imageEnabled = false,
+                            hasVideo = song.kind == "music-video",
+                            isExplicit = song.isExplicit,
                             onClick = { onSongClick(song.id) },
                             trailingIcon = null
                         )

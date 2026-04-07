@@ -64,8 +64,8 @@ import com.challenge.moises.feature.song_details.ui.viewmodels.SongDetailsViewMo
 import kotlinx.coroutines.delay
 import com.challenge.moises.design.R as DesignR
 
-@UnstableApi
-@OptIn(ExperimentalMaterial3Api::class, UnstableApi::class)
+@androidx.annotation.OptIn(UnstableApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SongDetailsScreen(
     songId: String,

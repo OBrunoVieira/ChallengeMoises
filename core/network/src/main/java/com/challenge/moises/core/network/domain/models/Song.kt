@@ -10,5 +10,6 @@ data class Song(
     val collectionId: String?,
     val artworkUrl: String?,
     val previewUrl: String?,
-    val kind: String?
+    val kind: String?,
+    val isExplicit: Boolean = false
 )

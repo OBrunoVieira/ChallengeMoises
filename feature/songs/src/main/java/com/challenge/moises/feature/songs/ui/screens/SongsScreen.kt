@@ -197,6 +197,8 @@ private fun SongsScreen(
                                     title = song.title,
                                     subtitle = song.artistName,
                                     imageUrl = song.artworkUrl,
+                                    hasVideo = song.kind == "music-video",
+                                    isExplicit = song.isExplicit,
                                     onClick = { onSongClick(song.id) }
                                 )
                             }
