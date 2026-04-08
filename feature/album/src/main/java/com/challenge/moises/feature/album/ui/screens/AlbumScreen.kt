@@ -113,7 +113,7 @@ private fun AlbumScreen(
                             title = song.title,
                             subtitle = song.artistName,
                             imageEnabled = false,
-                            hasVideo = song.kind == "music-video",
+                            hasVideo = song.hasVideo,
                             isExplicit = song.isExplicit,
                             onClick = { onSongClick(song.id) },
                             trailingIcon = null
@@ -174,8 +174,6 @@ private fun AlbumScreenPreview() {
                 collectionId = "456",
                 artworkUrl = null,
                 previewUrl = null,
-                kind = "album",
-                isExplicit = false,
                 isCollection = true
             ),
             songs = listOf(
@@ -188,8 +186,6 @@ private fun AlbumScreenPreview() {
                     collectionId = "456",
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = "song",
-                    isExplicit = false,
                     isCollection = false
                 ),
                 Song(
@@ -201,8 +197,6 @@ private fun AlbumScreenPreview() {
                     collectionId = "456",
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = "song",
-                    isExplicit = false,
                     isCollection = false
                 )
             ),
