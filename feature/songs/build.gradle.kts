@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(project(":core:network"))
+    implementation(project(":core:preferences"))
     implementation(project(":design"))
     
     implementation(platform(libs.androidx.compose.bom))
