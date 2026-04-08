@@ -23,19 +23,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -43,7 +40,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.airbnb.lottie.compose.LottieAnimation
@@ -51,6 +47,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.challenge.moises.common.player.rememberMoisesPlayer
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
@@ -77,8 +74,16 @@ fun SongDetailsScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
-    val player = remember { ExoPlayer.Builder(context).build() }
+    val player = rememberMoisesPlayer(
+        onIsPlayingChanged = { isPlayingParam ->
+            viewModel.onIsPlayingChanged(isPlayingParam)
+        },
+        onPlaybackStateChanged = { playbackState ->
+            if (playbackState == Player.STATE_READY) {
+                viewModel.setPlayerReadiness(true)
+            }
+        }
+    )
 
     var currentPosition by rememberSaveable { mutableLongStateOf(0L) }
     var duration by rememberSaveable { mutableLongStateOf(0L) }
@@ -90,26 +95,6 @@ fun SongDetailsScreen(
                 duration = player.duration.coerceAtLeast(0L)
                 delay(100)
             }
-        }
-    }
-
-    DisposableEffect(player) {
-        val listener = object : Player.Listener {
-            override fun onIsPlayingChanged(isPlayingParam: Boolean) {
-                viewModel.onIsPlayingChanged(isPlayingParam)
-            }
-
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                if (playbackState == Player.STATE_READY) {
-                    viewModel.setPlayerReadiness(true)
-                }
-            }
-        }
-
-        player.addListener(listener)
-        onDispose {
-            player.removeListener(listener)
-            player.release()
         }
     }
 

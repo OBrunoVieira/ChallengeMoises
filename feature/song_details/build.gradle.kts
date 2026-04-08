@@ -27,10 +27,15 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(project(":core:network"))
-    implementation(project(":design"))
 
-    // Compose
+    // Core
+    implementation(project(":core:network"))
+    
+    // Common
+    implementation(project(":common:player"))
+
+    // Design
+    implementation(project(":design"))
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.material3)
@@ -45,10 +50,6 @@ dependencies {
     
     // Coil
     implementation(libs.coil.network.okhttp)
-
-    // Exoplayer
-    implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
 
     // Lottie
     implementation(libs.lottie.compose)

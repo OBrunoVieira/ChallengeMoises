@@ -30,6 +30,7 @@ include(":design")
 include(":core:network")
 // Common
 include(":common:navigation")
+include(":common:player")
 //Features
 include(":feature:songs")
 include(":feature:song_details")
