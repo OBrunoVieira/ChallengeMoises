@@ -18,10 +18,7 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -51,6 +48,7 @@ import com.challenge.moises.common.player.rememberMoisesPlayer
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSlider
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
@@ -165,7 +163,6 @@ private fun MoisesMusicWaveAnimation(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SongDetailsScreen(
     uiState: SongDetailsUiState,
@@ -177,24 +174,9 @@ private fun SongDetailsScreen(
     onPause: () -> Unit = {},
     onSeek: (Long) -> Unit = {},
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(DesignR.string.song_details_title)) },
-                navigationIcon = {
-                    MoisesIconButton(
-                        onClick = onBackClick,
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(DesignR.string.back_content_description)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                )
-            )
-        },
+    MoisesScaffold(
+        title = stringResource(DesignR.string.song_details_title),
+        onBackClick = onBackClick,
         containerColor = Color.Transparent
     ) { padding ->
         Box(

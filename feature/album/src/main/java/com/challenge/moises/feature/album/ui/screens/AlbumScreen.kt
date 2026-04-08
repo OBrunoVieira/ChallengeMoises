@@ -15,14 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,13 +31,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.CircledImageIcon
 import com.challenge.moises.design.components.MoisesCircularLoading
-import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
+import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
+import com.challenge.moises.feature.album.ui.models.states.AlbumUiState
 import com.challenge.moises.feature.album.ui.viewmodels.AlbumViewModel
 import com.challenge.moises.design.R as DesignR
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlbumScreen(
     albumId: String,
@@ -55,26 +50,24 @@ fun AlbumScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    
+    AlbumScreen(
+        uiState = uiState,
+        onBackClick = onBackClick,
+        onSongClick = onSongClick
+    )
+}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(DesignR.string.album_title)) },
-                navigationIcon = {
-                    MoisesIconButton(
-                        onClick = onBackClick,
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(DesignR.string.back_content_description)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
-                    titleContentColor = Color.White,
-                    navigationIconContentColor = Color.White
-                )
-            )
-        },
-        containerColor = Color.Black
+@Composable
+private fun AlbumScreen(
+    uiState: AlbumUiState,
+    onBackClick: () -> Unit,
+    onSongClick: (String) -> Unit
+) {
+    MoisesScaffold(
+        title = stringResource(DesignR.string.album_title),
+        onBackClick = onBackClick,
+        topBarContainerColor = Color.Black
     ) { padding ->
         Box(
             modifier = Modifier
@@ -164,4 +157,58 @@ private fun AlbumHeader(album: Song?) {
             )
         }
     }
+}
+
+@MoisesPreviewScreenSizes
+@Composable
+private fun AlbumScreenPreview() {
+    AlbumScreen(
+        uiState = AlbumUiState(
+            isLoading = false,
+            album = Song(
+                id = "0",
+                artistId = "123",
+                title = "Unknown",
+                artistName = "Michael Jackson",
+                albumName = "Thriller",
+                collectionId = "456",
+                artworkUrl = null,
+                previewUrl = null,
+                kind = "album",
+                isExplicit = false,
+                isCollection = true
+            ),
+            songs = listOf(
+                Song(
+                    id = "1",
+                    artistId = "123",
+                    title = "Wanna Be Startin' Somethin'",
+                    artistName = "Michael Jackson",
+                    albumName = "Thriller",
+                    collectionId = "456",
+                    artworkUrl = null,
+                    previewUrl = null,
+                    kind = "song",
+                    isExplicit = false,
+                    isCollection = false
+                ),
+                Song(
+                    id = "2",
+                    artistId = "123",
+                    title = "Billie Jean",
+                    artistName = "Michael Jackson",
+                    albumName = "Thriller",
+                    collectionId = "456",
+                    artworkUrl = null,
+                    previewUrl = null,
+                    kind = "song",
+                    isExplicit = false,
+                    isCollection = false
+                )
+            ),
+            errorMessage = null
+        ),
+        onBackClick = {},
+        onSongClick = {}
+    )
 }

@@ -13,18 +13,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +40,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSearchTextField
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
@@ -75,7 +71,6 @@ fun SongsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SongsScreen(
     uiState: SongsUiState,
@@ -110,55 +105,45 @@ private fun SongsScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    AnimatedContent(
-                        targetState = isSearchEnabled,
-                        transitionSpec = {
-                            fadeIn() + slideInHorizontally() togetherWith fadeOut() + slideOutHorizontally()
-                        },
-                        label = "TitleAnimation"
-                    ) {
-                        if (it) {
-                            MoisesSearchTextField(
-                                modifier = Modifier.focusRequester(focusRequester),
-                                query = query,
-                                onQueryChanged = onQueryChanged,
-                                onSearch = {
-                                    isSearchEnabled = false
-                                    keyboardController?.hide()
-                                }
-                            )
-                        } else {
-                            Text(
-                                text = stringResource(DesignR.string.songs_title),
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.White
-                            )
+    MoisesScaffold(
+        titleContent = {
+            AnimatedContent(
+                targetState = isSearchEnabled,
+                transitionSpec = {
+                    fadeIn() + slideInHorizontally() togetherWith fadeOut() + slideOutHorizontally()
+                },
+                label = "TitleAnimation"
+            ) {
+                if (it) {
+                    MoisesSearchTextField(
+                        modifier = Modifier.focusRequester(focusRequester),
+                        query = query,
+                        onQueryChanged = onQueryChanged,
+                        onSearch = {
+                            isSearchEnabled = false
+                            keyboardController?.hide()
                         }
-                    }
-                },
-                actions = {
-                    MoisesIconButton(
-                        onClick = {
-                            if (isSearchEnabled) onClearQuery()
-                            isSearchEnabled = !isSearchEnabled
-                        },
-                        imageVector = if (isSearchEnabled) Icons.Default.Close else Icons.Default.Search,
-                        contentDescription = stringResource(DesignR.string.search_action_label),
                     )
+                } else {
+                    Text(
+                        text = stringResource(DesignR.string.songs_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White
+                    )
+                }
+            }
+        },
+        actions = {
+            MoisesIconButton(
+                onClick = {
+                    if (isSearchEnabled) onClearQuery()
+                    isSearchEnabled = !isSearchEnabled
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.White,
-                ),
-                modifier = Modifier.statusBarsPadding()
+                imageVector = if (isSearchEnabled) Icons.Default.Close else Icons.Default.Search,
+                contentDescription = stringResource(DesignR.string.search_action_label),
             )
         },
-        containerColor = Color.Black
     ) { padding ->
         Column(
             modifier = Modifier
@@ -171,10 +156,7 @@ private fun SongsScreen(
                     MoisesCircularLoading(
                         modifier = Modifier.align(Alignment.Center)
                     )
-                }
-
-                if (!uiState.isLoading) {
-
+                } else {
                     if (!isSearching && uiState.recentSongs.isEmpty()) {
                         SearchPlaceholder(
                             modifier = Modifier.align(Alignment.Center)
