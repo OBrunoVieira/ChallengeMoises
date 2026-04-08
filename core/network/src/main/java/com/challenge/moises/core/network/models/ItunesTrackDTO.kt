@@ -38,18 +38,4 @@ data class ItunesTrackDTO(
 
     @SerializedName("trackExplicitness")
     val trackExplicitness: String?
-) : Parcelable {
-    fun toDomain() = com.challenge.moises.core.network.domain.models.Song(
-        id = trackId?.toString() ?: "",
-        isCollection = wrapperType == "collection",
-        kind = kind,
-        artistId = artistId?.toString() ?: "",
-        title = trackName ?: "Unknown Track",
-        artistName = artistName ?: "Unknown Artist",
-        albumName = collectionName,
-        collectionId = collectionId?.toString(),
-        artworkUrl = artworkUrl100,
-        previewUrl = previewUrl,
-        isExplicit = trackExplicitness == "explicit"
-    )
-}
+) : Parcelable

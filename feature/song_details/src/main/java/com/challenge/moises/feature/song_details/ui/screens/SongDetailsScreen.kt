@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -106,10 +105,10 @@ fun SongDetailsScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
-        val isVideo = uiState.song?.kind == "music-video"
+        val hasVideo = uiState.song?.hasVideo == true
 
         if (uiState.isPlayerReady) {
-            if (isVideo) {
+            if (hasVideo) {
                 AndroidView(
                     factory = { context ->
                         PlayerView(context).apply {
@@ -302,7 +301,6 @@ fun SongDetailsScreenPreview() {
                 previewUrl = "https://example.com/preview.mp3",
                 collectionId = "123",
                 artistId = "456",
-                kind = "song",
                 isCollection = false
             )
         )
