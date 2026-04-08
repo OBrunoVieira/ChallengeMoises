@@ -11,4 +11,5 @@
     <string name="more_content_description">More</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_artist">Unknown Artist</string>
+    <string name="go_to_album">Go to album</string>
 </resources>
