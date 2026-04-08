@@ -5,8 +5,11 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import java.lang.reflect.Type
 
 /**
@@ -33,27 +36,17 @@ abstract class BasePreferencesManager(
             } else {
                 defaultValue
             }
-        }
+        }.flowOn(Dispatchers.IO)
     }
 
     /**
      * Writes a JSON string sequentially to the given preference key.
      */
     protected suspend fun <T> writeObject(key: Preferences.Key<String>, value: T) {
-        dataStore.edit { preferences ->
-            preferences[key] = gson.toJson(value)
+        withContext(Dispatchers.IO) {
+            dataStore.edit { preferences ->
+                preferences[key] = gson.toJson(value)
+            }
         }
     }
-
-    /**
-     * Standard helper to edit datastore preferences directly.
-     */
-    protected suspend fun edit(transform: suspend (MutablePreferences) -> Unit) {
-        dataStore.edit(transform)
-    }
-
-    /**
-     * Exposes DataStore to directly transform or extract anything else.
-     */
-    protected val preferencesFlow: Flow<Preferences> = dataStore.data
 }
