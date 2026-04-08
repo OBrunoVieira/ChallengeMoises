@@ -43,12 +43,21 @@ android {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
+
+    // Retrofit
     implementation(libs.retrofit)
     api(libs.retrofit.converter.gson)
     implementation(libs.okhttp.logging.interceptor)
+
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     
+    // Paging
+    implementation(libs.androidx.paging.common)
+    implementation(libs.androidx.paging.runtime)
+
+    // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

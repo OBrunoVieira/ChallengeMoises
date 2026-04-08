@@ -4,7 +4,6 @@ import com.challenge.moises.core.network.domain.models.Song
 
 data class SongsUiState(
     val isLoading: Boolean = false,
-    val searchedSongs: List<Song> = emptyList(),
-    val recentSongs: List<Song> = emptyList(),
+    val recentPlayedSongs: List<Song> = emptyList(),
     val errorMessage: String? = null
 )

@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -36,6 +38,10 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
@@ -48,6 +54,7 @@ import com.challenge.moises.feature.songs.ui.components.MoreOptionsBottomSheet
 import com.challenge.moises.feature.songs.ui.components.SearchPlaceholder
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import com.challenge.moises.feature.songs.ui.viewmodels.SongsViewModel
+import kotlinx.coroutines.flow.flowOf
 import com.challenge.moises.design.R as DesignR
 
 @Composable
@@ -58,10 +65,12 @@ fun SongsScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val query by viewModel.query.collectAsState()
+    val searchedSongs = viewModel.searchedSongs.collectAsLazyPagingItems()
 
     SongsScreen(
         uiState = uiState,
         query = query,
+        searchedSongs = searchedSongs,
         onQueryChanged = viewModel::onQueryChanged,
         onClearQuery = viewModel::clearQuery,
         onSongClick = onSongClick,
@@ -75,6 +84,7 @@ fun SongsScreen(
 private fun SongsScreen(
     uiState: SongsUiState,
     query: String,
+    searchedSongs: LazyPagingItems<Song>,
     onQueryChanged: (String) -> Unit,
     onClearQuery: () -> Unit,
     onSongClick: (String) -> Unit,
@@ -156,12 +166,15 @@ private fun SongsScreen(
                 )
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                if (uiState.isLoading) {
+                val isRefreshLoading =
+                    isSearching && searchedSongs.loadState.refresh is LoadState.Loading
+
+                if (uiState.isLoading || isRefreshLoading) {
                     MoisesCircularLoading(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 } else {
-                    if (!isSearching && uiState.recentSongs.isEmpty()) {
+                    if (!isSearching && uiState.recentPlayedSongs.isEmpty()) {
                         SearchPlaceholder(
                             modifier = Modifier.align(Alignment.Center)
                         )
@@ -170,23 +183,22 @@ private fun SongsScreen(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(MoisesSpacings.extraSmall)
                         ) {
-                            val songs =
-                                if (isSearching) uiState.searchedSongs else uiState.recentSongs
-
-                            items(songs, key = { it.id }) { song ->
-                                SongListItem(
-                                    title = song.title,
-                                    subtitle = song.artistName,
-                                    imageUrl = song.artworkUrl,
-                                    hasVideo = song.kind == "music-video",
-                                    isExplicit = song.isExplicit,
-                                    onClick = {
-                                        if (isSearching) {
-                                            onRecentSongAdd(song)
-                                        }
-                                        onSongClick(song.id)
+                            if (isSearching) {
+                                addSearchResults(
+                                    searchedSongs = searchedSongs,
+                                    onItemClicked = {
+                                        onRecentSongAdd(it)
+                                        onSongClick(it.id)
                                     },
-                                    onMoreClick = { selectedSongForOptions = song }
+                                    onMoreClick = { selectedSongForOptions = it }
+                                )
+
+                                addLoading(searchedSongs = searchedSongs)
+                            } else {
+                                addRecentPlayedResults(
+                                    recentPlayedSongs = uiState.recentPlayedSongs,
+                                    onSongClick = onSongClick,
+                                    onMoreClick = { selectedSongForOptions = it }
                                 )
                             }
                         }
@@ -210,12 +222,69 @@ private fun SongsScreen(
     }
 }
 
+private fun LazyListScope.addSearchResults(
+    searchedSongs: LazyPagingItems<Song>,
+    onItemClicked: (Song) -> Unit,
+    onMoreClick: (Song) -> Unit
+) {
+    items(
+        count = searchedSongs.itemCount,
+        key = { index -> searchedSongs[index]?.id ?: index.toString() }
+    ) { index ->
+        searchedSongs[index]?.let { song ->
+            SongListItem(
+                title = song.title,
+                subtitle = song.artistName,
+                imageUrl = song.artworkUrl,
+                hasVideo = song.hasVideo,
+                isExplicit = song.isExplicit,
+                onClick = { onItemClicked(song) },
+                onMoreClick = { onMoreClick(song) }
+            )
+        }
+    }
+}
+
+private fun LazyListScope.addRecentPlayedResults(
+    recentPlayedSongs: List<Song>,
+    onSongClick: (String) -> Unit,
+    onMoreClick: (Song) -> Unit
+) {
+    items(recentPlayedSongs, key = { it.id }) { song ->
+        SongListItem(
+            title = song.title,
+            subtitle = song.artistName,
+            imageUrl = song.artworkUrl,
+            hasVideo = song.hasVideo,
+            isExplicit = song.isExplicit,
+            onClick = { onSongClick(song.id) },
+            onMoreClick = { onMoreClick(song) }
+        )
+    }
+}
+
+private fun LazyListScope.addLoading(searchedSongs: LazyPagingItems<Song>) {
+    val state = searchedSongs.loadState.append
+    if (state is LoadState.Loading) {
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(MoisesSpacings.medium),
+                contentAlignment = Alignment.Center
+            ) {
+                MoisesCircularLoading()
+            }
+        }
+    }
+}
+
 @MoisesPreviewScreenSizes
 @Composable
-fun SongsScreenPreview() {
-    SongsScreen(
-        uiState = SongsUiState(
-            searchedSongs = listOf(
+private fun SongsScreenPreview() {
+    val searchedSongs = flowOf(
+        PagingData.from(
+            listOf(
                 Song(
                     id = "1",
                     artistId = "123",
@@ -225,7 +294,6 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = "",
                     isCollection = false
                 ),
                 Song(
@@ -237,11 +305,15 @@ fun SongsScreenPreview() {
                     collectionId = null,
                     artworkUrl = null,
                     previewUrl = null,
-                    kind = "",
                     isCollection = false
                 )
             )
-        ),
+        )
+    ).collectAsLazyPagingItems()
+
+    SongsScreen(
+        uiState = SongsUiState(),
+        searchedSongs = searchedSongs,
         query = "a-ha",
         onQueryChanged = {},
         onClearQuery = {},
