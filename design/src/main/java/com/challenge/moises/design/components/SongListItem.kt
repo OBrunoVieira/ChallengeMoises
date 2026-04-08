@@ -111,7 +111,7 @@ fun SongListItem(
                     text = subtitle,
                     modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray,
+                    color = Color.White,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
