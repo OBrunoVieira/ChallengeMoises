@@ -43,14 +43,17 @@ fun SongListItem(
     hasVideo: Boolean = false,
     isExplicit: Boolean = false,
     onClick: () -> Unit = {},
+    onMoreClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = {
-        IconButton(onClick = { /* More actions */ }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(R.string.more_content_description),
-                tint = Color.Gray,
-                modifier = Modifier.size(MoisesIconSizes.large)
-            )
+        if (onMoreClick != null) {
+            IconButton(onClick = onMoreClick) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.more_content_description),
+                    tint = Color.Gray,
+                    modifier = Modifier.size(MoisesIconSizes.large)
+                )
+            }
         }
     }
 ) {

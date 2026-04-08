@@ -32,6 +32,9 @@ fun AppNavHost() {
                     SongsScreen(
                         onSongClick = { songId ->
                             backStack.add(NavRoute.SongDetails(songId))
+                        },
+                        onAlbumClick = { albumId ->
+                            backStack.add(NavRoute.Album(albumId))
                         }
                     )
                 }
