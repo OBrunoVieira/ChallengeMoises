@@ -2,6 +2,9 @@ package com.challenge.moises.feature.songs.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.challenge.moises.core.network.domain.models.Song
+import com.challenge.moises.feature.songs.domain.usecase.SaveRecentSongUseCase
+import com.challenge.moises.feature.songs.domain.usecase.GetRecentSongsUseCase
 import com.challenge.moises.feature.songs.domain.usecase.SearchSongsUseCase
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +26,9 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class SongsViewModel @Inject constructor(
-    private val searchSongsUseCase: SearchSongsUseCase
+    private val searchSongsUseCase: SearchSongsUseCase,
+    private val getRecentSongsUseCase: GetRecentSongsUseCase,
+    private val saveRecentSongUseCase: SaveRecentSongUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SongsUiState())
@@ -33,7 +38,13 @@ class SongsViewModel @Inject constructor(
     val query: StateFlow<String> = _query.asStateFlow()
 
     init {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            getRecentSongsUseCase().collect { recentSongs ->
+                _uiState.update { it.copy(recentSongs = recentSongs) }
+            }
+        }
+
+        viewModelScope.launch {
             _query
                 .debounce(400)
                 .distinctUntilChanged()
@@ -48,7 +59,7 @@ class SongsViewModel @Inject constructor(
                         }
                 }
                 .collect { songs ->
-                    _uiState.update { it.copy(isLoading = false, songs = songs) }
+                    _uiState.update { it.copy(isLoading = false, searchedSongs = songs) }
                 }
         }
     }
@@ -56,11 +67,17 @@ class SongsViewModel @Inject constructor(
     fun onQueryChanged(query: String) {
         _query.value = query
         if (query.isBlank()) {
-            _uiState.update { it.copy(songs = emptyList(), errorMessage = null) }
+            _uiState.update { it.copy(searchedSongs = emptyList(), errorMessage = null) }
         }
     }
 
     fun clearQuery() {
         onQueryChanged("")
+    }
+
+    fun saveRecentSong(song: Song) {
+        viewModelScope.launch {
+            saveRecentSongUseCase(song)
+        }
     }
 }

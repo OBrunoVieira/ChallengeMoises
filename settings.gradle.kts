@@ -28,6 +28,7 @@ include(":app")
 include(":design")
 //Core
 include(":core:network")
+include(":core:preferences")
 // Common
 include(":common:navigation")
 include(":common:player")

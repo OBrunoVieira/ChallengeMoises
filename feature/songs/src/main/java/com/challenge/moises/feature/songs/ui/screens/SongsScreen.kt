@@ -12,25 +12,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,14 +41,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoisesSearchTextField
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
+import com.challenge.moises.feature.songs.ui.components.MoreOptionsBottomSheet
 import com.challenge.moises.feature.songs.ui.components.SearchPlaceholder
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import com.challenge.moises.feature.songs.ui.viewmodels.SongsViewModel
@@ -61,6 +58,7 @@ import com.challenge.moises.design.R as DesignR
 @Composable
 fun SongsScreen(
     onSongClick: (String) -> Unit,
+    onAlbumClick: (String) -> Unit = {},
     viewModel: SongsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -71,7 +69,9 @@ fun SongsScreen(
         query = query,
         onQueryChanged = viewModel::onQueryChanged,
         onClearQuery = viewModel::clearQuery,
-        onSongClick = onSongClick
+        onSongClick = onSongClick,
+        onAlbumClick = onAlbumClick,
+        onRecentSongAdd = viewModel::saveRecentSong
     )
 }
 
@@ -82,62 +82,54 @@ private fun SongsScreen(
     query: String,
     onQueryChanged: (String) -> Unit,
     onClearQuery: () -> Unit,
-    onSongClick: (String) -> Unit
+    onSongClick: (String) -> Unit,
+    onAlbumClick: (String) -> Unit,
+    onRecentSongAdd: (Song) -> Unit
 ) {
-    var isSearching by remember { mutableStateOf(false) }
+    var isSearchEnabled by remember { mutableStateOf(false) }
+    val isSearching = query.isNotBlank()
+
+    var selectedSongForOptions by remember { mutableStateOf<Song?>(null) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    BackHandler(isSearching) {
-        isSearching = false
+    BackHandler(isSearchEnabled) {
+        onClearQuery()
+        isSearchEnabled = false
     }
 
-    LaunchedEffect(isSearching) {
-        if (isSearching) {
+    LaunchedEffect(isSearchEnabled) {
+        if (isSearchEnabled) {
             focusRequester.requestFocus()
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            onClearQuery()
         }
     }
 
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
                     AnimatedContent(
-                        targetState = isSearching,
+                        targetState = isSearchEnabled,
                         transitionSpec = {
                             fadeIn() + slideInHorizontally() togetherWith fadeOut() + slideOutHorizontally()
                         },
                         label = "TitleAnimation"
-                    ) { searching ->
-                        if (searching) {
-                            TextField(
-                                value = query,
-                                onValueChange = onQueryChanged,
-                                placeholder = {
-                                    Text(
-                                        stringResource(DesignR.string.search_hint),
-                                        color = Color.Gray
-                                    )
-                                },
-                                colors = TextFieldDefaults.colors(
-                                    focusedContainerColor = Color.Transparent,
-                                    unfocusedContainerColor = Color.Transparent,
-                                    focusedIndicatorColor = Color.Transparent,
-                                    unfocusedIndicatorColor = Color.Transparent,
-                                    cursorColor = Color.White,
-                                    focusedTextColor = Color.White
-                                ),
-                                singleLine = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .focusRequester(focusRequester),
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                                keyboardActions = KeyboardActions(
-                                    onSearch = {
-                                        isSearching = false
-                                        keyboardController?.hide()
-                                    }
-                                )
+                    ) {
+                        if (it) {
+                            MoisesSearchTextField(
+                                modifier = Modifier.focusRequester(focusRequester),
+                                query = query,
+                                onQueryChanged = onQueryChanged,
+                                onSearch = {
+                                    isSearchEnabled = false
+                                    keyboardController?.hide()
+                                }
                             )
                         } else {
                             Text(
@@ -152,10 +144,10 @@ private fun SongsScreen(
                 actions = {
                     MoisesIconButton(
                         onClick = {
-                            if(isSearching) onClearQuery()
-                            isSearching = true
+                            if (isSearchEnabled) onClearQuery()
+                            isSearchEnabled = !isSearchEnabled
                         },
-                        imageVector = if (isSearching) Icons.Default.Close else Icons.Default.Search,
+                        imageVector = if (isSearchEnabled) Icons.Default.Close else Icons.Default.Search,
                         contentDescription = stringResource(DesignR.string.search_action_label),
                     )
                 },
@@ -182,7 +174,8 @@ private fun SongsScreen(
                 }
 
                 if (!uiState.isLoading) {
-                    if (query.isBlank() && uiState.songs.isEmpty()) {
+
+                    if (!isSearching && uiState.recentSongs.isEmpty()) {
                         SearchPlaceholder(
                             modifier = Modifier.align(Alignment.Center)
                         )
@@ -192,14 +185,23 @@ private fun SongsScreen(
                             contentPadding = PaddingValues(bottom = MoisesSpacings.extraLarge),
                             verticalArrangement = Arrangement.spacedBy(MoisesSpacings.extraSmall)
                         ) {
-                            items(uiState.songs, key = { it.id }) { song ->
+                            val songs =
+                                if (isSearching) uiState.searchedSongs else uiState.recentSongs
+
+                            items(songs, key = { it.id }) { song ->
                                 SongListItem(
                                     title = song.title,
                                     subtitle = song.artistName,
                                     imageUrl = song.artworkUrl,
                                     hasVideo = song.kind == "music-video",
                                     isExplicit = song.isExplicit,
-                                    onClick = { onSongClick(song.id) }
+                                    onClick = {
+                                        if (isSearching) {
+                                            onRecentSongAdd(song)
+                                        }
+                                        onSongClick(song.id)
+                                    },
+                                    onMoreClick = { selectedSongForOptions = song }
                                 )
                             }
                         }
@@ -208,6 +210,14 @@ private fun SongsScreen(
             }
         }
     }
+
+    selectedSongForOptions?.let { song ->
+        MoreOptionsBottomSheet(
+            song = song,
+            onDismissRequest = { selectedSongForOptions = null },
+            onAlbumClick = onAlbumClick
+        )
+    }
 }
 
 @MoisesPreviewScreenSizes
@@ -215,7 +225,7 @@ private fun SongsScreen(
 fun SongsScreenPreview() {
     SongsScreen(
         uiState = SongsUiState(
-            songs = listOf(
+            searchedSongs = listOf(
                 Song(
                     id = "1",
                     artistId = "123",
@@ -245,6 +255,8 @@ fun SongsScreenPreview() {
         query = "a-ha",
         onQueryChanged = {},
         onClearQuery = {},
-        onSongClick = {}
+        onSongClick = {},
+        onAlbumClick = {},
+        onRecentSongAdd = {}
     )
 }
