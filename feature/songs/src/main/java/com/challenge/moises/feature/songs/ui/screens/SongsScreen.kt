@@ -10,7 +10,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -67,7 +66,8 @@ fun SongsScreen(
         onClearQuery = viewModel::clearQuery,
         onSongClick = onSongClick,
         onAlbumClick = onAlbumClick,
-        onRecentSongAdd = viewModel::saveRecentSong
+        onRecentSongAdd = viewModel::saveRecentSong,
+        onRemoveRecentSong = viewModel::removeRecentSong
     )
 }
 
@@ -79,7 +79,8 @@ private fun SongsScreen(
     onClearQuery: () -> Unit,
     onSongClick: (String) -> Unit,
     onAlbumClick: (String) -> Unit,
-    onRecentSongAdd: (Song) -> Unit
+    onRecentSongAdd: (Song) -> Unit,
+    onRemoveRecentSong: (Song) -> Unit
 ) {
     var isSearchEnabled by remember { mutableStateOf(false) }
     val isSearching = query.isNotBlank()
@@ -149,7 +150,10 @@ private fun SongsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = MoisesSpacings.large)
+                .padding(
+                    vertical = MoisesSpacings.small,
+                    horizontal = MoisesSpacings.large
+                )
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 if (uiState.isLoading) {
@@ -164,7 +168,6 @@ private fun SongsScreen(
                     } else {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(bottom = MoisesSpacings.extraLarge),
                             verticalArrangement = Arrangement.spacedBy(MoisesSpacings.extraSmall)
                         ) {
                             val songs =
@@ -197,7 +200,12 @@ private fun SongsScreen(
         MoreOptionsBottomSheet(
             song = song,
             onDismissRequest = { selectedSongForOptions = null },
-            onAlbumClick = onAlbumClick
+            onAlbumClick = onAlbumClick,
+            onRemoveFromRecent = if (!isSearching) {
+                { onRemoveRecentSong(song) }
+            } else {
+                null
+            }
         )
     }
 }
@@ -239,6 +247,7 @@ fun SongsScreenPreview() {
         onClearQuery = {},
         onSongClick = {},
         onAlbumClick = {},
-        onRecentSongAdd = {}
+        onRecentSongAdd = {},
+        onRemoveRecentSong = {}
     )
 }

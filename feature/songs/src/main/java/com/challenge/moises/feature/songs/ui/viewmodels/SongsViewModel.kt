@@ -3,8 +3,9 @@ package com.challenge.moises.feature.songs.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.feature.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.feature.songs.domain.usecase.GetRecentSongsUseCase
+import com.challenge.moises.feature.songs.domain.usecase.RemoveRecentSongUseCase
+import com.challenge.moises.feature.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.feature.songs.domain.usecase.SearchSongsUseCase
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class SongsViewModel @Inject constructor(
     private val searchSongsUseCase: SearchSongsUseCase,
     private val getRecentSongsUseCase: GetRecentSongsUseCase,
-    private val saveRecentSongUseCase: SaveRecentSongUseCase
+    private val saveRecentSongUseCase: SaveRecentSongUseCase,
+    private val removeRecentSongUseCase: RemoveRecentSongUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SongsUiState())
@@ -78,6 +80,12 @@ class SongsViewModel @Inject constructor(
     fun saveRecentSong(song: Song) {
         viewModelScope.launch {
             saveRecentSongUseCase(song)
+        }
+    }
+
+    fun removeRecentSong(song: Song) {
+        viewModelScope.launch {
+            removeRecentSongUseCase(song)
         }
     }
 }

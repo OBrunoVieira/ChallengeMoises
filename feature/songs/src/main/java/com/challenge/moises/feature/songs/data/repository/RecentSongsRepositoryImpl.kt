@@ -45,4 +45,14 @@ class RecentSongsRepositoryImpl @Inject constructor(
 
         writeObject(RECENT_SONGS_KEY, currentList)
     }
+
+    override suspend fun removeRecentSong(song: Song) {
+        val type = object : TypeToken<List<Song>>() {}.type
+        val currentList = readObject<List<Song>>(RECENT_SONGS_KEY, type, emptyList())
+            .firstOrNull()
+            ?.toMutableList() ?: mutableListOf()
+
+        currentList.removeAll { it.id == song.id }
+        writeObject(RECENT_SONGS_KEY, currentList)
+    }
 }

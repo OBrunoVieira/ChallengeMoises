@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface RecentSongsRepository {
     fun getRecentSongs(): Flow<List<Song>>
     suspend fun saveRecentSong(song: Song)
+    suspend fun removeRecentSong(song: Song)
 }
