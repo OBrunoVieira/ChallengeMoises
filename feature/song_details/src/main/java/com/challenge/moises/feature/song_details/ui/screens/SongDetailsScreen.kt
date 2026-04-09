@@ -187,11 +187,13 @@ private fun SongDetailsScreen(
         onBackClick = onBackClick,
         containerColor = Color.Transparent,
         actions = {
-            MoisesIconButton(
-                onClick = { showMoreOptions = true },
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = stringResource(DesignR.string.song_list_item_more_options_button_content_description),
-            )
+            if (!uiState.song?.collectionId.isNullOrEmpty()) {
+                MoisesIconButton(
+                    onClick = { showMoreOptions = true },
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(DesignR.string.song_list_item_more_options_button_content_description),
+                )
+            }
         }
     ) { padding ->
         Box(

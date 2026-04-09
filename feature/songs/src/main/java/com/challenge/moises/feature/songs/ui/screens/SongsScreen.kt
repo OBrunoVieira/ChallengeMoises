@@ -253,7 +253,11 @@ private fun LazyListScope.addSearchResults(
                 hasVideo = song.hasVideo,
                 isExplicit = song.isExplicit,
                 onClick = { onItemClicked(song) },
-                onMoreClick = { onMoreClick(song) }
+                onMoreClick = if (!song.collectionId.isNullOrEmpty()) {
+                    { onMoreClick(song) }
+                } else {
+                    null
+                }
             )
         }
     }
@@ -272,7 +276,11 @@ private fun LazyListScope.addRecentPlayedResults(
             hasVideo = song.hasVideo,
             isExplicit = song.isExplicit,
             onClick = { onSongClick(song.id) },
-            onMoreClick = { onMoreClick(song) }
+            onMoreClick = if (!song.collectionId.isNullOrEmpty()) {
+                { onMoreClick(song) }
+            } else {
+                null
+            }
         )
     }
 }
