@@ -3,6 +3,7 @@ package com.challenge.moises.feature.song_details.ui.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.challenge.moises.design.ui.models.MoisesErrorType
+import com.challenge.moises.common.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.feature.song_details.domain.usecase.GetSongDetailsUseCase
 import com.challenge.moises.feature.song_details.ui.models.states.SongDetailsUiState
 import dagger.assisted.Assisted
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = SongDetailsViewModel.Factory::class)
 class SongDetailsViewModel @AssistedInject constructor(
     private val getSongDetailsUseCase: GetSongDetailsUseCase,
+    private val saveRecentSongUseCase: SaveRecentSongUseCase,
     @Assisted private val songId: String
 ) : ViewModel() {
 
@@ -62,6 +64,13 @@ class SongDetailsViewModel @AssistedInject constructor(
 
     fun onIsPlayingChanged(isPlaying: Boolean) {
         _uiState.update { it.copy(isPlaying = isPlaying) }
+        if (isPlaying) {
+            uiState.value.song?.let { song ->
+                viewModelScope.launch {
+                    saveRecentSongUseCase(song)
+                }
+            }
+        }
     }
 
     fun setPlayerReadiness(isReady: Boolean) {

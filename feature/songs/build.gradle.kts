@@ -32,6 +32,9 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:preferences"))
 
+    // Common
+    implementation(project(":common:songs"))
+
     // Design
     implementation(project(":design"))
     implementation(platform(libs.androidx.compose.bom))

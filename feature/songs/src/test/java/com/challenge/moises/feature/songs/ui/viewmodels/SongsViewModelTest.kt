@@ -1,10 +1,10 @@
 package com.challenge.moises.feature.songs.ui.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.challenge.moises.common.songs.domain.usecase.GetRecentSongsUseCase
+import com.challenge.moises.common.songs.domain.usecase.RemoveRecentSongUseCase
+import com.challenge.moises.common.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.feature.songs.domain.usecase.GetRecentSongsUseCase
-import com.challenge.moises.feature.songs.domain.usecase.RemoveRecentSongUseCase
-import com.challenge.moises.feature.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.feature.songs.domain.usecase.SearchSongsUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify

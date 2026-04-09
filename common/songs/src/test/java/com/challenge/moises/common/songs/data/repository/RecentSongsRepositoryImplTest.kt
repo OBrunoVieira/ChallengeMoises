@@ -1,4 +1,4 @@
-package com.challenge.moises.feature.songs.data.repository
+package com.challenge.moises.common.songs.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory

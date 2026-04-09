@@ -30,9 +30,11 @@ dependencies {
 
     // Core
     implementation(project(":core:network"))
+    implementation(project(":core:preferences"))
     
     // Common
     implementation(project(":common:player"))
+    implementation(project(":common:songs"))
 
     // Design
     implementation(project(":design"))

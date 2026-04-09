@@ -1,28 +1,28 @@
-package com.challenge.moises.feature.songs.domain.usecase
+package com.challenge.moises.common.songs.domain.usecase
 
+import com.challenge.moises.common.songs.domain.repository.RecentSongsRepository
 import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.feature.songs.data.repository.RecentSongsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class SaveRecentSongUseCaseTest {
+class RemoveRecentSongUseCaseTest {
 
     private val repository = mockk<RecentSongsRepository>()
-    private val useCase = SaveRecentSongUseCase(repository)
+    private val useCase = RemoveRecentSongUseCase(repository)
 
     @Test
     fun `invoke calls repository`() = runTest {
         // Given
         val song = mockk<Song>()
-        coEvery { repository.saveRecentSong(song) } returns Unit
+        coEvery { repository.removeRecentSong(song) } returns Unit
 
         // When
         useCase(song)
 
         // Then
-        coVerify { repository.saveRecentSong(song) }
+        coVerify { repository.removeRecentSong(song) }
     }
 }

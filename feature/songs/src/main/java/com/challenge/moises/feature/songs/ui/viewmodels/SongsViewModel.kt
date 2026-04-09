@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.feature.songs.domain.usecase.GetRecentSongsUseCase
-import com.challenge.moises.feature.songs.domain.usecase.RemoveRecentSongUseCase
-import com.challenge.moises.feature.songs.domain.usecase.SaveRecentSongUseCase
+import com.challenge.moises.common.songs.domain.usecase.GetRecentSongsUseCase
+import com.challenge.moises.common.songs.domain.usecase.RemoveRecentSongUseCase
+import com.challenge.moises.common.songs.domain.usecase.SaveRecentSongUseCase
 import com.challenge.moises.feature.songs.domain.usecase.SearchSongsUseCase
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -32,6 +32,7 @@ include(":core:preferences")
 // Common
 include(":common:navigation")
 include(":common:player")
+include(":common:songs")
 //Features
 include(":feature:songs")
 include(":feature:song_details")

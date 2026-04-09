@@ -1,11 +1,11 @@
-package com.challenge.moises.feature.songs.di
+package com.challenge.moises.common.songs.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.challenge.moises.feature.songs.data.repository.RecentSongsRepository
-import com.challenge.moises.feature.songs.data.repository.RecentSongsRepositoryImpl
+import com.challenge.moises.common.songs.data.repository.RecentSongsRepositoryImpl
+import com.challenge.moises.common.songs.domain.repository.RecentSongsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class SongsModule {
+abstract class CommonSongsModule {
 
     @Binds
     @Singleton

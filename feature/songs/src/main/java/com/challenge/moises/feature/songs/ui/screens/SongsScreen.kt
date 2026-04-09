@@ -200,7 +200,6 @@ private fun SongsScreen(
                                 addSearchResults(
                                     searchedSongs = searchedSongs,
                                     onItemClicked = {
-                                        onRecentSongAdd(it)
                                         onSongClick(it.id)
                                     },
                                     onMoreClick = { selectedSongForOptions = it }

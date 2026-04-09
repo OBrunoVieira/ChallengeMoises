@@ -1,8 +1,9 @@
-package com.challenge.moises.feature.songs.data.repository
+package com.challenge.moises.common.songs.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.challenge.moises.common.songs.domain.repository.RecentSongsRepository
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.core.preferences.BasePreferencesManager
 import com.google.gson.Gson
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class RecentSongsRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    dataStore: DataStore<Preferences>
 ) : BasePreferencesManager(dataStore, Gson()), RecentSongsRepository {
 
     companion object {
