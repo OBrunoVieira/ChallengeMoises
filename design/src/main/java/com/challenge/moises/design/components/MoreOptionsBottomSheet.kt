@@ -1,5 +1,6 @@
 package com.challenge.moises.design.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.challenge.moises.design.R
 import com.challenge.moises.design.tokens.MoisesSpacings
@@ -57,7 +59,7 @@ fun MoreOptionsBottomSheet(
             if (onAlbumClick != null) {
                 OptionListItem(
                     label = stringResource(R.string.view_album),
-                    icon = Icons.Default.Album,
+                    icon = R.drawable.ic_album,
                     onClick = {
                         onDismissRequest()
                         onAlbumClick()
@@ -68,7 +70,7 @@ fun MoreOptionsBottomSheet(
             if (onRemoveFromRecent != null) {
                 OptionListItem(
                     label = stringResource(R.string.remove_from_recent),
-                    icon = Icons.Default.DeleteOutline,
+                    icon = R.drawable.ic_delete,
                     onClick = {
                         onDismissRequest()
                         onRemoveFromRecent()
@@ -82,7 +84,7 @@ fun MoreOptionsBottomSheet(
 @Composable
 private fun OptionListItem(
     label: String,
-    icon: ImageVector,
+    @DrawableRes icon: Int,
     onClick: () -> Unit
 ) {
     ListItem(
@@ -94,7 +96,7 @@ private fun OptionListItem(
         },
         leadingContent = {
             Icon(
-                imageVector = icon,
+                painter = painterResource(icon),
                 contentDescription = null,
                 tint = Color.White
             )
