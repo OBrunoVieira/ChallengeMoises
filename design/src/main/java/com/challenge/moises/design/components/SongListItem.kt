@@ -30,6 +30,12 @@ import androidx.compose.ui.unit.dp
 import com.challenge.moises.design.R
 import com.challenge.moises.design.tokens.MoisesIconSizes
 import com.challenge.moises.design.tokens.MoisesSpacings
+import com.challenge.moises.design.tokens.White_70
+
+enum class SongSize {
+    DEFAULT, LARGE
+}
+
 
 @Composable
 fun SongListItem(
@@ -41,6 +47,7 @@ fun SongListItem(
     hasVideo: Boolean = false,
     isExplicit: Boolean = false,
     onClick: () -> Unit = {},
+    size: SongSize = SongSize.DEFAULT,
     onMoreClick: (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = {
         if (onMoreClick != null) {
@@ -74,7 +81,9 @@ fun SongListItem(
         ) {
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium,
+                style =
+                    if (size == SongSize.DEFAULT) MaterialTheme.typography.titleMedium
+                    else MaterialTheme.typography.displayLarge,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -109,7 +118,10 @@ fun SongListItem(
                 Text(
                     text = subtitle,
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodySmall,
+                    color = White_70,
+                    style =
+                        if (size == SongSize.DEFAULT) MaterialTheme.typography.bodySmall
+                        else MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

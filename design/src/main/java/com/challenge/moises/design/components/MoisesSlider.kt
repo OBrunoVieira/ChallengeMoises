@@ -1,10 +1,13 @@
 package com.challenge.moises.design.components
 
 import android.text.format.DateUtils
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -16,9 +19,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import com.challenge.moises.design.tokens.MoisesSpacings
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoisesSlider(
     modifier: Modifier = Modifier,
@@ -30,8 +36,7 @@ fun MoisesSlider(
     val displayValue = dragValue ?: currentPosition.toFloat()
 
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(MoisesSpacings.small)
+        modifier = modifier.fillMaxWidth()
     ) {
         Slider(
             value = displayValue,
@@ -41,11 +46,24 @@ fun MoisesSlider(
                 dragValue?.let { onSeek(it.toLong()) }
                 dragValue = null
             },
-            colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.primary,
-                activeTrackColor = MaterialTheme.colorScheme.primary,
-                inactiveTrackColor = Color.White.copy(alpha = 0.3f)
-            )
+            thumb = {
+                SliderDefaults.Thumb(
+                    interactionSource = remember { MutableInteractionSource() },
+                    thumbSize = DpSize(12.dp, 12.dp),
+                    colors = SliderDefaults.colors(thumbColor = Color.White)
+                )
+            },
+            track = { sliderState ->
+                SliderDefaults.Track(
+                    sliderState = sliderState,
+                    modifier = Modifier.height(4.dp),
+                    colors = SliderDefaults.colors(
+                        thumbColor = MaterialTheme.colorScheme.primary,
+                        activeTrackColor = MaterialTheme.colorScheme.primary,
+                        inactiveTrackColor = Color.White.copy(alpha = 0.3f)
+                    )
+                )
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -54,12 +72,13 @@ fun MoisesSlider(
             Text(
                 text = displayValue.toLong().toElapsedTime(),
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White
+                color = Color.Gray
             )
+            val remainingTime = duration - displayValue.toLong()
             Text(
-                text = duration.toElapsedTime(),
+                text = "-${remainingTime.coerceAtLeast(0L).toElapsedTime()}",
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White
+                color = Color.Gray
             )
         }
     }

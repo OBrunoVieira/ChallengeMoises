@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -50,7 +51,9 @@ import com.challenge.moises.design.components.MoisesIconButton
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSlider
 import com.challenge.moises.design.components.SongListItem
+import com.challenge.moises.design.components.SongSize
 import com.challenge.moises.design.tokens.MoisesSpacings
+import com.challenge.moises.design.tokens.TextGrey
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
 import com.challenge.moises.feature.song_details.R
 import com.challenge.moises.feature.song_details.ui.models.states.SongDetailsUiState
@@ -246,9 +249,10 @@ private fun MoisesPlayerControl(
             .then(backgroundModifier)
             .navigationBarsPadding()
             .padding(MoisesSpacings.large),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
     ) {
         SongListItem(
+            size = SongSize.LARGE,
             title = song?.title.orEmpty(),
             subtitle = song?.artistName.orEmpty(),
             imageUrl = song?.artworkUrl,

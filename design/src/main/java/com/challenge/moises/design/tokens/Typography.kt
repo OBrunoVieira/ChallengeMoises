@@ -36,7 +36,8 @@ val MoisesTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = ArticulatCF,
         fontWeight = FontWeight.W600,
-        fontSize = 32.sp
+        fontSize = 32.sp,
+        color = White_70
     ),
     titleLarge = TextStyle(
         fontFamily = ArticulatCF,
