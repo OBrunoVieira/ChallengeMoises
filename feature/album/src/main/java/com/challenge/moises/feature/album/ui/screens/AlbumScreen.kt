@@ -6,8 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,11 +26,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.design.components.CircledImageIcon
+import com.challenge.moises.design.components.ImageIcon
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
+import com.challenge.moises.design.tokens.White_70
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
 import com.challenge.moises.feature.album.ui.models.states.AlbumUiState
 import com.challenge.moises.feature.album.ui.viewmodels.AlbumViewModel
@@ -100,7 +99,6 @@ private fun AlbumScreen(
             ) {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = MoisesSpacings.extraLarge),
                 ) {
                     item {
                         AlbumHeader(album = uiState.album)
@@ -111,7 +109,7 @@ private fun AlbumScreen(
                         SongListItem(
                             title = song.title,
                             subtitle = song.artistName,
-                            imageEnabled = false,
+                            imageUrl = song.artworkUrl,
                             hasVideo = song.hasVideo,
                             isExplicit = song.isExplicit,
                             onClick = { onSongClick(song.id) },
@@ -127,33 +125,32 @@ private fun AlbumScreen(
 @Composable
 private fun AlbumHeader(album: Song?) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth().padding(vertical = MoisesSpacings.large),
+        verticalArrangement = Arrangement.spacedBy(MoisesSpacings.small),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        ImageIcon(
+            imageUrl = album?.artworkUrl,
+            size = 120.dp
+        )
+
+        Spacer(Modifier.height(MoisesSpacings.small))
+
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = album?.albumName ?: stringResource(DesignR.string.unknown_album),
             style = MaterialTheme.typography.titleLarge,
             color = Color.White,
+            textAlign = TextAlign.Center
         )
 
-        Row(
+        Text(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CircledImageIcon(
-                imageUrl = album?.artworkUrl,
-                size = 18.dp
-            )
-
-            Text(
-                text = album?.artistName ?: stringResource(DesignR.string.unknown_artist),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-        }
+            text = album?.artistName ?: stringResource(DesignR.string.unknown_artist),
+            style = MaterialTheme.typography.titleMedium,
+            color = White_70,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
