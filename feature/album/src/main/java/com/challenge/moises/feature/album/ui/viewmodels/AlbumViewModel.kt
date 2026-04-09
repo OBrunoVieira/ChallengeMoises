@@ -2,6 +2,7 @@ package com.challenge.moises.feature.album.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.challenge.moises.design.ui.models.MoisesErrorType
 import com.challenge.moises.feature.album.domain.usecase.GetAlbumSongsUseCase
 import com.challenge.moises.feature.album.ui.models.states.AlbumUiState
 import dagger.assisted.Assisted
@@ -38,10 +39,20 @@ class AlbumViewModel @AssistedInject constructor(
         viewModelScope.launch {
             getAlbumSongsUseCase(albumId)
                 .onStart {
-                    _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+                    _uiState.update { it.copy(isLoading = true, errorType = null) }
                 }
                 .catch { error ->
-                    _uiState.update { it.copy(isLoading = false, errorMessage = error.message ?: "Unknown error") }
+                    val errorType = if (error is java.io.IOException) {
+                        MoisesErrorType.INTERNET
+                    } else {
+                        MoisesErrorType.SERVER
+                    }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errorType = errorType
+                        )
+                    }
                 }
                 .collect { songs ->
                     val (collections, songs) = songs.partition { it.isCollection }

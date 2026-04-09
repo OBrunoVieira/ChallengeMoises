@@ -2,6 +2,7 @@ package com.challenge.moises.feature.album.ui.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.challenge.moises.core.network.domain.models.Song
+import com.challenge.moises.design.ui.models.MoisesErrorType
 import com.challenge.moises.feature.album.domain.usecase.GetAlbumSongsUseCase
 import io.mockk.every
 import io.mockk.mockk
@@ -63,17 +64,17 @@ class AlbumViewModelTest {
     }
 
     @Test
-    fun `loadAlbum error updates uiState with error message`() = runTest {
+    fun `loadAlbum error updates uiState with error type`() = runTest {
         // Given
         val albumId = "123"
-        val errorMessage = "Network Error"
-        every { getAlbumSongsUseCase(albumId) } returns flow { throw Exception(errorMessage) }
+        val exception = java.io.IOException("Network Error")
+        every { getAlbumSongsUseCase(albumId) } returns flow { throw exception }
 
         // When
         viewModel = AlbumViewModel(getAlbumSongsUseCase, albumId)
 
         // Then
         assertFalse(viewModel.uiState.value.isLoading)
-        assertEquals(errorMessage, viewModel.uiState.value.errorMessage)
+        assertEquals(MoisesErrorType.INTERNET, viewModel.uiState.value.errorType)
     }
 }

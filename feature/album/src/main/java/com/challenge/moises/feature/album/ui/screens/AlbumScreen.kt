@@ -28,6 +28,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.ImageIcon
 import com.challenge.moises.design.components.MoisesCircularLoading
+import com.challenge.moises.design.components.MoisesError
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
@@ -48,11 +49,12 @@ fun AlbumScreen(
     )
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    
+
     AlbumScreen(
         uiState = uiState,
         onBackClick = onBackClick,
-        onSongClick = onSongClick
+        onSongClick = onSongClick,
+        onRetry = { viewModel.loadAlbum(albumId) }
     )
 }
 
@@ -60,7 +62,8 @@ fun AlbumScreen(
 private fun AlbumScreen(
     uiState: AlbumUiState,
     onBackClick: () -> Unit,
-    onSongClick: (String) -> Unit
+    onSongClick: (String) -> Unit,
+    onRetry: () -> Unit
 ) {
     MoisesScaffold(
         title = stringResource(DesignR.string.album_screen_title),
@@ -77,44 +80,37 @@ private fun AlbumScreen(
                 MoisesCircularLoading(
                     modifier = Modifier.align(Alignment.Center)
                 )
-            }
-
-            AnimatedVisibility(
-                visible = !uiState.isLoading && uiState.errorMessage != null,
-                enter = fadeIn(), exit = fadeOut(),
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(
-                    text = uiState.errorMessage ?: "Unknown error",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(MoisesSpacings.medium),
-                    textAlign = TextAlign.Center
+            } else if (uiState.errorType != null) {
+                MoisesError(
+                    type = uiState.errorType,
+                    onRetry = onRetry,
+                    modifier = Modifier.align(Alignment.Center)
                 )
-            }
-
-            AnimatedVisibility(
-                visible = !uiState.isLoading && uiState.songs.isNotEmpty(),
-                enter = fadeIn(), exit = fadeOut(),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+            } else {
+                AnimatedVisibility(
+                    visible = uiState.songs.isNotEmpty(),
+                    enter = fadeIn(), exit = fadeOut(),
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    item {
-                        AlbumHeader(album = uiState.album)
-                        Spacer(Modifier.height(48.dp))
-                    }
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                    ) {
+                        item {
+                            AlbumHeader(album = uiState.album)
+                            Spacer(Modifier.height(48.dp))
+                        }
 
-                    items(uiState.songs, key = { it.id }) { song ->
-                        SongListItem(
-                            title = song.title,
-                            subtitle = song.artistName,
-                            imageUrl = song.artworkUrl,
-                            hasVideo = song.hasVideo,
-                            isExplicit = song.isExplicit,
-                            onClick = { onSongClick(song.id) },
-                            trailingIcon = null
-                        )
+                        items(uiState.songs, key = { it.id }) { song ->
+                            SongListItem(
+                                title = song.title,
+                                subtitle = song.artistName,
+                                imageUrl = song.artworkUrl,
+                                hasVideo = song.hasVideo,
+                                isExplicit = song.isExplicit,
+                                onClick = { onSongClick(song.id) },
+                                trailingIcon = null
+                            )
+                        }
                     }
                 }
             }
@@ -125,7 +121,9 @@ private fun AlbumScreen(
 @Composable
 private fun AlbumHeader(album: Song?) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(vertical = MoisesSpacings.large),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = MoisesSpacings.large),
         verticalArrangement = Arrangement.spacedBy(MoisesSpacings.small),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -195,9 +193,10 @@ private fun AlbumScreenPreview() {
                     isCollection = false
                 )
             ),
-            errorMessage = null
+            errorType = null
         ),
         onBackClick = {},
-        onSongClick = {}
+        onSongClick = {},
+        onRetry = {}
     )
 }

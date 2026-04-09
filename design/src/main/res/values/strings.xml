@@ -27,4 +27,11 @@
     <!--  Song list item  -->
     <string name="song_list_item_more_options_button_content_description">More</string>
     <string name="song_list_item_video_icon_content_description">Video</string>
+    
+    <!-- Error State -->
+    <string name="error_internet_title">No Internet Connection</string>
+    <string name="error_internet_subtitle">Please check your network settings and try again</string>
+    <string name="error_server_title">Something Went Wrong</string>
+    <string name="error_server_subtitle">We are having trouble connecting to our servers</string>
+    <string name="error_retry_button">Try Again</string>
 </resources>

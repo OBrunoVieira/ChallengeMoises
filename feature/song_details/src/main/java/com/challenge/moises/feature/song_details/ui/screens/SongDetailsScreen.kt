@@ -1,8 +1,5 @@
 package com.challenge.moises.feature.song_details.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +16,6 @@ import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -50,10 +46,11 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.challenge.moises.common.player.rememberMoisesPlayer
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
+import com.challenge.moises.design.components.MoisesError
 import com.challenge.moises.design.components.MoisesIconButton
-import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSlider
+import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.components.SongSize
 import com.challenge.moises.design.tokens.MoisesIconSizes
@@ -146,7 +143,8 @@ fun SongDetailsScreen(
             onSeek = { position ->
                 player.seekTo(position)
                 currentPosition = position
-            }
+            },
+            onRetry = { viewModel.loadSong(songId) }
         )
     }
 }
@@ -180,6 +178,7 @@ private fun SongDetailsScreen(
     onPlay: () -> Unit = {},
     onPause: () -> Unit = {},
     onSeek: (Long) -> Unit = {},
+    onRetry: () -> Unit = {}
 ) {
     var showMoreOptions by remember { mutableStateOf(false) }
 
@@ -204,27 +203,15 @@ private fun SongDetailsScreen(
                 MoisesCircularLoading(
                     modifier = Modifier.align(Alignment.Center)
                 )
-            }
-
-            //TODO - Optmize error handling
-            AnimatedVisibility(
-                visible = uiState.errorMessage != null,
-                enter = fadeIn(), exit = fadeOut(),
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text(
-                    text = uiState.errorMessage ?: "Unknown error",
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier.padding(MoisesSpacings.medium)
+            } else if (uiState.errorType != null) {
+                MoisesError(
+                    type = uiState.errorType,
+                    onRetry = onRetry,
+                    modifier = Modifier.align(Alignment.Center)
                 )
-            }
-
-            AnimatedVisibility(
-                visible = !uiState.isPlayerLoading,
-                enter = fadeIn(), exit = fadeOut(),
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) {
+            } else {
                 MoisesPlayerControl(
+                    modifier = Modifier.align(Alignment.BottomCenter),
                     song = uiState.song,
                     isPlaying = uiState.isPlaying,
                     onPause = onPause,
@@ -258,6 +245,7 @@ private fun SongDetailsScreen(
 
 @Composable
 private fun MoisesPlayerControl(
+    modifier: Modifier = Modifier,
     song: Song?,
     isPlaying: Boolean,
     onPause: () -> Unit,
@@ -274,7 +262,7 @@ private fun MoisesPlayerControl(
         )
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .then(backgroundModifier)
             .navigationBarsPadding()

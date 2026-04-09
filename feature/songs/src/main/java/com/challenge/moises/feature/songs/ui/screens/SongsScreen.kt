@@ -42,13 +42,15 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
+import com.challenge.moises.design.components.MoisesError
 import com.challenge.moises.design.components.MoisesIconButton
-import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSearchTextField
+import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
+import com.challenge.moises.design.ui.models.MoisesErrorType
 import com.challenge.moises.feature.songs.ui.components.SearchPlaceholder
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import com.challenge.moises.feature.songs.ui.viewmodels.SongsViewModel
@@ -165,7 +167,20 @@ private fun SongsScreen(
                 val isRefreshLoading =
                     isSearching && searchedSongs.loadState.refresh is LoadState.Loading
 
-                if (uiState.isLoading || isRefreshLoading) {
+                val refreshError = searchedSongs.loadState.refresh as? LoadState.Error
+
+                if (refreshError != null) {
+                    val errorType = if (refreshError.error is java.io.IOException) {
+                        MoisesErrorType.INTERNET
+                    } else {
+                        MoisesErrorType.SERVER
+                    }
+
+                    MoisesError(
+                        type = errorType,
+                        onRetry = { searchedSongs.retry() }
+                    )
+                } else if (uiState.isLoading || isRefreshLoading) {
                     MoisesCircularLoading(
                         modifier = Modifier.align(Alignment.Center)
                     )

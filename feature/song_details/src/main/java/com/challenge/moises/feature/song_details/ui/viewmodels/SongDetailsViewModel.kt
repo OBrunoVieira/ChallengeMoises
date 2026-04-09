@@ -2,6 +2,7 @@ package com.challenge.moises.feature.song_details.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.challenge.moises.design.ui.models.MoisesErrorType
 import com.challenge.moises.feature.song_details.domain.usecase.GetSongDetailsUseCase
 import com.challenge.moises.feature.song_details.ui.models.states.SongDetailsUiState
 import dagger.assisted.Assisted
@@ -38,13 +39,18 @@ class SongDetailsViewModel @AssistedInject constructor(
         viewModelScope.launch {
             getSongDetailsUseCase(songId)
                 .onStart {
-                    _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+                    _uiState.update { it.copy(isLoading = true, errorType = null) }
                 }
                 .catch { error ->
+                    val errorType = if (error is java.io.IOException) {
+                        MoisesErrorType.INTERNET
+                    } else {
+                        MoisesErrorType.SERVER
+                    }
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            errorMessage = error.message ?: "Unknown error"
+                            errorType = errorType
                         )
                     }
                 }

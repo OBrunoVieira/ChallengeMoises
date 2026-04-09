@@ -2,11 +2,13 @@ package com.challenge.moises.feature.song_details.ui.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.challenge.moises.core.network.domain.models.Song
+import com.challenge.moises.design.ui.models.MoisesErrorType
 import com.challenge.moises.feature.song_details.domain.usecase.GetSongDetailsUseCase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -79,5 +81,20 @@ class SongDetailsViewModelTest {
 
         // Then
         assertTrue(viewModel.uiState.value.isPlayerReady)
+    }
+
+    @Test
+    fun `loadSong error updates uiState with error type`() = runTest {
+        // Given
+        val songId = "123"
+        val exception = java.io.IOException("Network Error")
+        every { getSongDetailsUseCase(songId) } returns flow { throw exception }
+
+        // When
+        viewModel = SongDetailsViewModel(getSongDetailsUseCase, songId)
+
+        // Then
+        assertFalse(viewModel.uiState.value.isLoading)
+        assertEquals(MoisesErrorType.INTERNET, viewModel.uiState.value.errorType)
     }
 }
