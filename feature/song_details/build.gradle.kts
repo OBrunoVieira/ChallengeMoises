@@ -53,6 +53,12 @@ dependencies {
 
     // Lottie
     implementation(libs.lottie.compose)
+
+    // Test
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.arch.core.testing)
 }
 
 kotlin {

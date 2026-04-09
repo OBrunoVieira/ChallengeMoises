@@ -1,4 +1,4 @@
-package com.challenge.moises.feature.songs.domain.repository
+package com.challenge.moises.feature.songs.data.repository
 
 import com.challenge.moises.core.network.domain.models.Song
 import kotlinx.coroutines.flow.Flow

@@ -1,25 +1,19 @@
 package com.challenge.moises.feature.songs.data.repository
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.core.preferences.BasePreferencesManager
-import com.challenge.moises.feature.songs.domain.repository.RecentSongsRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "recent_songs_prefs")
-
 class RecentSongsRepositoryImpl @Inject constructor(
-    @ApplicationContext context: Context
-) : BasePreferencesManager(context.dataStore, Gson()), RecentSongsRepository {
+    private val dataStore: DataStore<Preferences>
+) : BasePreferencesManager(dataStore, Gson()), RecentSongsRepository {
 
     companion object {
         private val RECENT_SONGS_KEY = stringPreferencesKey("recent_songs")

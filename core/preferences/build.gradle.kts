@@ -23,6 +23,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     api(libs.androidx.datastore.preferences)
     api(libs.gson)
+
+    // Test
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
 
 kotlin {
