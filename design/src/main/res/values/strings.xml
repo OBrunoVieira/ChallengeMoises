@@ -1,16 +1,30 @@
 <resources>
-    <string name="app_name">Moises iTunes</string>
-    <string name="songs_title">Songs</string>
-    <string name="album_title">Album</string>
-    <string name="song_details_title">Details</string>
-    <string name="search_hint">Search songs, artists…</string>
-    <string name="search_action_label">Search</string>
-    <string name="search_placeholder_title">Turn it up!</string>
-    <string name="search_placeholder_subtitle">Search for your favorite songs and artists</string>
-    <string name="back_content_description">Back</string>
-    <string name="more_content_description">More</string>
+    <!-- Common -->
+    <string name="app_name">Moises</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_artist">Unknown Artist</string>
     <string name="view_album">View album</string>
     <string name="remove_from_recent">Remove from recents</string>
+
+    <!-- Songs Screen -->
+    <string name="songs_screen_title">Songs</string>
+    <string name="songs_screen_search_hint">Search songs, artists…</string>
+    <string name="songs_screen_search_action_content_description">Search</string>
+    <string name="songs_screen_placeholder_title">Turn it up!</string>
+    <string name="songs_screen_placeholder_subtitle">Search for your favorite songs and artists</string>
+
+    <!-- Album Screen -->
+    <string name="album_screen_title">Album</string>
+
+    <!-- Song Details Screen -->
+    <string name="song_details_screen_title">Details</string>
+    <string name="song_details_player_play_button_content_description">Play</string>
+    <string name="song_details_player_pause_button_content_description">Pause</string>
+
+    <!-- Scaffold -->
+    <string name="scaffold_back_button_content_description">Back</string>
+
+    <!--  Song list item  -->
+    <string name="song_list_item_more_options_button_content_description">More</string>
+    <string name="song_list_item_video_icon_content_description">Video</string>
 </resources>

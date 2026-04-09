@@ -47,7 +47,7 @@ fun SongListItem(
             IconButton(onClick = onMoreClick) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.more_content_description),
+                    contentDescription = stringResource(R.string.song_list_item_more_options_button_content_description),
                     tint = Color.Gray,
                     modifier = Modifier.size(MoisesIconSizes.large)
                 )
@@ -100,7 +100,7 @@ fun SongListItem(
                 if (hasVideo) {
                     Icon(
                         imageVector = Icons.Default.Videocam,
-                        contentDescription = "Video",
+                        contentDescription = stringResource(R.string.song_list_item_video_icon_content_description),
                         tint = Color.Gray,
                         modifier = Modifier.size(12.dp)
                     )

@@ -14,6 +14,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.challenge.moises.design.R
 
 /**
  * Custom Scaffold that provides a consistent TopAppBar styling across all screens.
@@ -52,7 +54,7 @@ fun MoisesScaffold(
                         MoisesIconButton(
                             onClick = onBackClick,
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.scaffold_back_button_content_description)
                         )
                     }
                 },

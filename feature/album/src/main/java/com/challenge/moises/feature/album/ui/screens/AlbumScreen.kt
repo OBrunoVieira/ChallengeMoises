@@ -64,7 +64,7 @@ private fun AlbumScreen(
     onSongClick: (String) -> Unit
 ) {
     MoisesScaffold(
-        title = stringResource(DesignR.string.album_title),
+        title = stringResource(DesignR.string.album_screen_title),
         onBackClick = onBackClick,
         topBarContainerColor = Color.Black
     ) { padding ->

@@ -46,14 +46,14 @@ fun SearchPlaceholder(modifier: Modifier = Modifier) {
         }
         Spacer(modifier = Modifier.height(MoisesSpacings.large))
         Text(
-            text = stringResource(DesignR.string.search_placeholder_title),
+            text = stringResource(DesignR.string.songs_screen_placeholder_title),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(MoisesSpacings.small))
         Text(
-            text = stringResource(DesignR.string.search_placeholder_subtitle),
+            text = stringResource(DesignR.string.songs_screen_placeholder_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center

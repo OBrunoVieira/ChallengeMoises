@@ -174,7 +174,7 @@ private fun SongDetailsScreen(
     onSeek: (Long) -> Unit = {},
 ) {
     MoisesScaffold(
-        title = stringResource(DesignR.string.song_details_title),
+        title = stringResource(DesignR.string.song_details_screen_title),
         onBackClick = onBackClick,
         containerColor = Color.Transparent
     ) { padding ->
@@ -272,7 +272,11 @@ private fun MoisesPlayerControl(
 
             MoisesIconButton(
                 imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                contentDescription = if (isPlaying) "Pause" else "Play",
+                contentDescription = if (isPlaying) {
+                    stringResource(DesignR.string.song_details_player_pause_button_content_description)
+                } else {
+                    stringResource(DesignR.string.song_details_player_play_button_content_description)
+                },
                 onClick = {
                     if (isPlaying) {
                         onPause()

@@ -135,7 +135,7 @@ private fun SongsScreen(
                     )
                 } else {
                     Text(
-                        text = stringResource(DesignR.string.songs_title),
+                        text = stringResource(DesignR.string.songs_screen_title),
                         style = MaterialTheme.typography.headlineMedium
                     )
                 }
@@ -148,7 +148,7 @@ private fun SongsScreen(
                     isSearchEnabled = !isSearchEnabled
                 },
                 imageVector = if (isSearchEnabled) Icons.Default.Close else Icons.Default.Search,
-                contentDescription = stringResource(DesignR.string.search_action_label),
+                contentDescription = stringResource(DesignR.string.songs_screen_search_action_content_description),
             )
         },
     ) { padding ->

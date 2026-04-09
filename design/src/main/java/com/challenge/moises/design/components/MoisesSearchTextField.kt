@@ -26,7 +26,7 @@ fun MoisesSearchTextField(
         onValueChange = onQueryChanged,
         placeholder = {
             Text(
-                stringResource(R.string.search_hint),
+                stringResource(R.string.songs_screen_search_hint),
                 color = Color.Gray
             )
         },
