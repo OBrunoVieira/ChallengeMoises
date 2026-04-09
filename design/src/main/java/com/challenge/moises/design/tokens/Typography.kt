@@ -31,7 +31,7 @@ val MoisesTypography = Typography(
         fontFamily = ArticulatCF,
         fontWeight = FontWeight.W500,
         fontSize = 12.sp,
-        color = MediumGrey
+        color = White_70
     ),
     displayLarge = TextStyle(
         fontFamily = ArticulatCF,
