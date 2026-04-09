@@ -1,4 +1,4 @@
-package com.challenge.moises.feature.songs.ui.components
+package com.challenge.moises.design.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,17 +22,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import com.challenge.moises.core.network.domain.models.Song
-import com.challenge.moises.design.components.SongListItem
+import com.challenge.moises.design.R
 import com.challenge.moises.design.tokens.MoisesSpacings
-import com.challenge.moises.design.R as DesignR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoreOptionsBottomSheet(
-    song: Song,
+    title: String,
+    subtitle: String,
+    imageUrl: String?,
     onDismissRequest: () -> Unit,
-    onAlbumClick: (String) -> Unit,
+    onAlbumClick: (() -> Unit)? = null,
     onRemoveFromRecent: (() -> Unit)? = null
 ) {
     ModalBottomSheet(
@@ -46,28 +46,28 @@ fun MoreOptionsBottomSheet(
             SongListItem(
                 modifier = Modifier
                     .padding(horizontal = MoisesSpacings.large),
-                title = song.title,
-                subtitle = song.artistName,
-                imageUrl = song.artworkUrl,
+                title = title,
+                subtitle = subtitle,
+                imageUrl = imageUrl,
                 trailingIcon = null
             )
 
             Spacer(Modifier.height(MoisesSpacings.medium))
 
-            if (!song.collectionId.isNullOrEmpty()) {
+            if (onAlbumClick != null) {
                 OptionListItem(
-                    label = stringResource(DesignR.string.view_album),
+                    label = stringResource(R.string.view_album),
                     icon = Icons.Default.Album,
                     onClick = {
                         onDismissRequest()
-                        song.collectionId?.let { onAlbumClick(it) }
+                        onAlbumClick()
                     }
                 )
             }
 
             if (onRemoveFromRecent != null) {
                 OptionListItem(
-                    label = stringResource(DesignR.string.remove_from_recent),
+                    label = stringResource(R.string.remove_from_recent),
                     icon = Icons.Default.DeleteOutline,
                     onClick = {
                         onDismissRequest()

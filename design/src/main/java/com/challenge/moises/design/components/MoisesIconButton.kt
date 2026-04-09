@@ -3,6 +3,7 @@ package com.challenge.moises.design.components
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,11 +18,15 @@ fun MoisesIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tint: Color = Color.White,
+    containerColor: Color = Color.Transparent,
     iconSize: Dp = MoisesIconSizes.larger
 ) {
     IconButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = containerColor
+        )
     ) {
         Icon(
             imageVector = imageVector,

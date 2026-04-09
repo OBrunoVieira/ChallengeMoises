@@ -17,7 +17,7 @@
     <string name="album_screen_title">Album</string>
 
     <!-- Song Details Screen -->
-    <string name="song_details_screen_title">Details</string>
+    <string name="song_details_screen_title">Now playing</string>
     <string name="song_details_player_play_button_content_description">Play</string>
     <string name="song_details_player_pause_button_content_description">Pause</string>
 

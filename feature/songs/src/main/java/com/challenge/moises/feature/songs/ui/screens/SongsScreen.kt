@@ -43,12 +43,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSearchTextField
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.tokens.MoisesSpacings
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
-import com.challenge.moises.feature.songs.ui.components.MoreOptionsBottomSheet
 import com.challenge.moises.feature.songs.ui.components.SearchPlaceholder
 import com.challenge.moises.feature.songs.ui.models.states.SongsUiState
 import com.challenge.moises.feature.songs.ui.viewmodels.SongsViewModel
@@ -206,9 +206,11 @@ private fun SongsScreen(
 
     selectedSongForOptions?.let { song ->
         MoreOptionsBottomSheet(
-            song = song,
+            title = song.title,
+            subtitle = song.artistName,
+            imageUrl = song.artworkUrl,
             onDismissRequest = { selectedSongForOptions = null },
-            onAlbumClick = onAlbumClick,
+            onAlbumClick = { onAlbumClick(song.collectionId.orEmpty()) },
             onRemoveFromRecent = if (!isSearching) {
                 { onRemoveRecentSong(song) }
             } else {

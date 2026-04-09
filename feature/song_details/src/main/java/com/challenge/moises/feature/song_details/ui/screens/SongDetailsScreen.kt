@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +25,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -48,12 +51,14 @@ import com.challenge.moises.common.player.rememberMoisesPlayer
 import com.challenge.moises.core.network.domain.models.Song
 import com.challenge.moises.design.components.MoisesCircularLoading
 import com.challenge.moises.design.components.MoisesIconButton
+import com.challenge.moises.design.components.MoreOptionsBottomSheet
 import com.challenge.moises.design.components.MoisesScaffold
 import com.challenge.moises.design.components.MoisesSlider
 import com.challenge.moises.design.components.SongListItem
 import com.challenge.moises.design.components.SongSize
+import com.challenge.moises.design.tokens.MoisesIconSizes
 import com.challenge.moises.design.tokens.MoisesSpacings
-import com.challenge.moises.design.tokens.TextGrey
+import com.challenge.moises.design.tokens.White_20
 import com.challenge.moises.design.tokens.annotations.MoisesPreviewScreenSizes
 import com.challenge.moises.feature.song_details.R
 import com.challenge.moises.feature.song_details.ui.models.states.SongDetailsUiState
@@ -176,10 +181,19 @@ private fun SongDetailsScreen(
     onPause: () -> Unit = {},
     onSeek: (Long) -> Unit = {},
 ) {
+    var showMoreOptions by remember { mutableStateOf(false) }
+
     MoisesScaffold(
         title = stringResource(DesignR.string.song_details_screen_title),
         onBackClick = onBackClick,
-        containerColor = Color.Transparent
+        containerColor = Color.Transparent,
+        actions = {
+            MoisesIconButton(
+                onClick = { showMoreOptions = true },
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = stringResource(DesignR.string.song_list_item_more_options_button_content_description),
+            )
+        }
     ) { padding ->
         Box(
             modifier = Modifier
@@ -214,13 +228,30 @@ private fun SongDetailsScreen(
                     song = uiState.song,
                     isPlaying = uiState.isPlaying,
                     onPause = onPause,
-                    onAlbumClick = onAlbumClick,
                     currentPosition = currentPosition,
                     duration = duration,
                     onSeek = onSeek,
                     onPlay = onPlay
                 )
             }
+        }
+    }
+
+    if (showMoreOptions) {
+        uiState.song?.let { song ->
+            MoreOptionsBottomSheet(
+                title = song.title,
+                subtitle = song.artistName,
+                imageUrl = song.artworkUrl,
+                onDismissRequest = { showMoreOptions = false },
+                onAlbumClick = {
+                    song.collectionId?.let {
+                        onPause()
+                    }
+
+                    onAlbumClick(song.collectionId.orEmpty())
+                }
+            )
         }
     }
 }
@@ -230,7 +261,6 @@ private fun MoisesPlayerControl(
     song: Song?,
     isPlaying: Boolean,
     onPause: () -> Unit,
-    onAlbumClick: (String) -> Unit,
     currentPosition: Long,
     duration: Long,
     onSeek: (Long) -> Unit,
@@ -256,12 +286,6 @@ private fun MoisesPlayerControl(
             title = song?.title.orEmpty(),
             subtitle = song?.artistName.orEmpty(),
             imageUrl = song?.artworkUrl,
-            onClick = {
-                song?.collectionId?.let {
-                    onPause()
-                    onAlbumClick(it)
-                }
-            },
             trailingIcon = null
         )
 
@@ -288,8 +312,12 @@ private fun MoisesPlayerControl(
                         onPlay()
                     }
                 },
-                iconSize = 32.dp,
-                tint = MaterialTheme.colorScheme.primary
+                iconSize = MoisesIconSizes.extraLarge,
+                tint = MaterialTheme.colorScheme.primary,
+                containerColor = White_20,
+                modifier = Modifier
+                    .size(72.dp)
+                    .align(Alignment.CenterHorizontally)
             )
         }
     }
