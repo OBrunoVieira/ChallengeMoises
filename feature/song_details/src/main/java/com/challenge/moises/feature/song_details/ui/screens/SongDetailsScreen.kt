@@ -199,28 +199,32 @@ private fun SongDetailsScreen(
                 .fillMaxSize()
                 .padding(top = padding.calculateTopPadding())
         ) {
-            if (uiState.isPlayerLoading) {
-                MoisesCircularLoading(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else if (uiState.errorType != null) {
-                MoisesError(
-                    type = uiState.errorType,
-                    onRetry = onRetry,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                MoisesPlayerControl(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    song = uiState.song,
-                    isPlaying = uiState.isPlaying,
-                    onPause = onPause,
-                    currentPosition = currentPosition,
-                    duration = duration,
-                    onSeek = onSeek,
-                    onPlay = onPlay
-                )
-            }
+                when {
+                    uiState.isPlayerLoading -> {
+                        MoisesCircularLoading(modifier = Modifier.align(Alignment.Center))
+                    }
+
+                    uiState.errorType != null -> {
+                        MoisesError(
+                            type = uiState.errorType,
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+
+                    else -> {
+                        MoisesPlayerControl(
+                            modifier = Modifier.align(Alignment.BottomCenter),
+                            song = uiState.song,
+                            isPlaying = uiState.isPlaying,
+                            onPause = onPause,
+                            currentPosition = currentPosition,
+                            duration = duration,
+                            onSeek = onSeek,
+                            onPlay = onPlay
+                        )
+                    }
+                }
         }
     }
 

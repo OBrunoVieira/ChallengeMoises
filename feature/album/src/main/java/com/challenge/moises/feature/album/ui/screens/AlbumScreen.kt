@@ -76,44 +76,48 @@ private fun AlbumScreen(
                 .padding(padding)
                 .padding(horizontal = MoisesSpacings.large)
         ) {
-            if (uiState.isLoading) {
-                MoisesCircularLoading(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else if (uiState.errorType != null) {
-                MoisesError(
-                    type = uiState.errorType,
-                    onRetry = onRetry,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                AnimatedVisibility(
-                    visible = uiState.songs.isNotEmpty(),
-                    enter = fadeIn(), exit = fadeOut(),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        item {
-                            AlbumHeader(album = uiState.album)
-                            Spacer(Modifier.height(48.dp))
-                        }
+                when {
+                    uiState.isLoading -> {
+                        MoisesCircularLoading(modifier = Modifier.align(Alignment.Center))
+                    }
 
-                        items(uiState.songs, key = { it.id }) { song ->
-                            SongListItem(
-                                title = song.title,
-                                subtitle = song.artistName,
-                                imageUrl = song.artworkUrl,
-                                hasVideo = song.hasVideo,
-                                isExplicit = song.isExplicit,
-                                onClick = { onSongClick(song.id) },
-                                trailingIcon = null
-                            )
+                    uiState.errorType != null -> {
+                        MoisesError(
+                            type = uiState.errorType,
+                            onRetry = onRetry,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+
+                    else -> {
+                        AnimatedVisibility(
+                            visible = uiState.songs.isNotEmpty(),
+                            enter = fadeIn(), exit = fadeOut(),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                item {
+                                    AlbumHeader(album = uiState.album)
+                                    Spacer(Modifier.height(48.dp))
+                                }
+
+                                items(uiState.songs, key = { it.id }) { song ->
+                                    SongListItem(
+                                        title = song.title,
+                                        subtitle = song.artistName,
+                                        imageUrl = song.artworkUrl,
+                                        hasVideo = song.hasVideo,
+                                        isExplicit = song.isExplicit,
+                                        onClick = { onSongClick(song.id) },
+                                        trailingIcon = null
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }

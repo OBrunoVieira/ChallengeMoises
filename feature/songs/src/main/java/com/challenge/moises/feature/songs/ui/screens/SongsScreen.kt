@@ -169,27 +169,29 @@ private fun SongsScreen(
 
                 val refreshError = searchedSongs.loadState.refresh as? LoadState.Error
 
-                if (refreshError != null) {
-                    val errorType = if (refreshError.error is java.io.IOException) {
-                        MoisesErrorType.INTERNET
-                    } else {
-                        MoisesErrorType.SERVER
+                when {
+                    refreshError != null -> {
+                        val errorType = if (refreshError.error is java.io.IOException) {
+                            MoisesErrorType.INTERNET
+                        } else {
+                            MoisesErrorType.SERVER
+                        }
+
+                        MoisesError(
+                            type = errorType,
+                            onRetry = { searchedSongs.retry() }
+                        )
                     }
 
-                    MoisesError(
-                        type = errorType,
-                        onRetry = { searchedSongs.retry() }
-                    )
-                } else if (uiState.isLoading || isRefreshLoading) {
-                    MoisesCircularLoading(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                } else {
-                    if (!isSearching && uiState.recentPlayedSongs.isEmpty()) {
-                        SearchPlaceholder(
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    } else {
+                    uiState.isLoading || isRefreshLoading -> {
+                        MoisesCircularLoading(modifier = Modifier.align(Alignment.Center))
+                    }
+
+                    !isSearching && uiState.recentPlayedSongs.isEmpty() -> {
+                        SearchPlaceholder(modifier = Modifier.align(Alignment.Center))
+                    }
+
+                    else -> {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             verticalArrangement = Arrangement.spacedBy(MoisesSpacings.extraSmall)
