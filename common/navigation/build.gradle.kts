@@ -21,3 +21,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
+
+kotlin {
+    jvmToolchain(17)
+}

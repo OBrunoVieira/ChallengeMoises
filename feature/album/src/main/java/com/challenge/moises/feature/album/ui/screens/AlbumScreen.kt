@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -135,8 +134,7 @@ private fun AlbumHeader(album: Song?) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = album?.albumName ?: stringResource(DesignR.string.unknown_album),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge,
             color = Color.White,
         )
 
@@ -152,7 +150,7 @@ private fun AlbumHeader(album: Song?) {
 
             Text(
                 text = album?.artistName ?: stringResource(DesignR.string.unknown_artist),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
         }

@@ -54,3 +54,7 @@ dependencies {
     // Lottie
     implementation(libs.lottie.compose)
 }
+
+kotlin {
+    jvmToolchain(17)
+}

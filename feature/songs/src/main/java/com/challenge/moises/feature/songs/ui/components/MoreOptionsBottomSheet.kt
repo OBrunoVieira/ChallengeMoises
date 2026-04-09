@@ -10,10 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Album
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -87,7 +87,10 @@ private fun OptionListItem(
 ) {
     ListItem(
         headlineContent = {
-            Text(label, color = Color.White)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.titleMedium
+            )
         },
         leadingContent = {
             Icon(

@@ -24,3 +24,7 @@ dependencies {
     api(libs.androidx.datastore.preferences)
     api(libs.gson)
 }
+
+kotlin {
+    jvmToolchain(17)
+}

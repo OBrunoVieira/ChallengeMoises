@@ -29,3 +29,7 @@ dependencies {
     api(libs.androidx.media3.exoplayer)
     api(libs.androidx.media3.ui)
 }
+
+kotlin {
+    jvmToolchain(17)
+}

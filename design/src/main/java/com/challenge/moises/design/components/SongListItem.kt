@@ -24,11 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.challenge.moises.design.R
 import com.challenge.moises.design.tokens.MoisesIconSizes
 import com.challenge.moises.design.tokens.MoisesSpacings
@@ -62,7 +60,7 @@ fun SongListItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
-            .padding(vertical = MoisesSpacings.small),
+            .padding(vertical = MoisesSpacings.medium),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MoisesSpacings.medium)
     ) {
@@ -70,12 +68,13 @@ fun SongListItem(
             ImageIcon(imageUrl)
         }
 
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(MoisesSpacings.extraSmall)
+        ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -93,10 +92,7 @@ fun SongListItem(
                     ) {
                         Text(
                             text = "E",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 9.sp
-                            )
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
@@ -113,8 +109,7 @@ fun SongListItem(
                 Text(
                     text = subtitle,
                     modifier = Modifier.weight(1f),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
+                    style = MaterialTheme.typography.bodySmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

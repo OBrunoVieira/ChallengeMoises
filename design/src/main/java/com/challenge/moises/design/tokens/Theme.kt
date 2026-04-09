@@ -24,6 +24,7 @@ fun MoisesTheme(
 ) {
     MaterialTheme(
         colorScheme = MoisesColorScheme,
+        typography = MoisesTypography,
         content = content
     )
 }

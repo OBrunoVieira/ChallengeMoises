@@ -45,3 +45,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 }
+
+kotlin {
+    jvmToolchain(17)
+}
