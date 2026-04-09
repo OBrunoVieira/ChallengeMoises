@@ -67,12 +67,12 @@ fun SongListItem(
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
-            .padding(vertical = MoisesSpacings.medium),
+            .padding(vertical = MoisesSpacings.small),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MoisesSpacings.medium)
     ) {
         if (imageEnabled) {
-            ImageIcon(imageUrl)
+            ImageIcon(imageUrl, size = if (size == SongSize.DEFAULT) 48.dp else 52.dp)
         }
 
         Column(
